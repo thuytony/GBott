@@ -4,6 +4,10 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+    <gcam.vn.gbot.view.widget.UiToolBarBack
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/title_restaurant"/>
     <gcam.vn.gbot.view.widget.FontTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,9 +19,4 @@
         android:layout_centerVertical="true"
         android:textColor="@android:color/white"
         android:text="@string/title_restaurant"/>
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/my_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none" />
 </LinearLayout>

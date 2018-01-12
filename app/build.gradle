@@ -14,7 +14,7 @@ try {
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "online.thuythu.deathnote"
+        applicationId "gcam.vn.gbot.view.fragment"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

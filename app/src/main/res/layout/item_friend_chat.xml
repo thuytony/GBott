@@ -2,30 +2,59 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/ic_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="@drawable/ic_avatar_default"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@android:color/white"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="5dp"/>
-    <gcam.vn.gbot.view.widget.FontTextView
-        android:id="@+id/txt_friend_chat"
-        android:layout_width="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?android:selectableItemBackground"
+    android:padding="5dp">
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/ic_avatar"
-        app:custom_font="DroidSerif-Regular"
-        android:textSize="@dimen/text_size_large"
-        android:gravity="center"
-        android:layout_centerVertical="true"
-        android:textColor="@android:color/white"
-        android:text="Friend chat"
-        android:background="@drawable/bg_friend_chat"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="10dp"
-        android:padding="5dp"/>
+        android:orientation="vertical"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/ic_avatar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_avatar_default"
+                app:civ_border_width="2dp"
+                app:civ_border_color="@android:color/white"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"/>
+            <gcam.vn.gbot.view.widget.FontTextView
+                android:id="@+id/itemFriendTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical"
+                android:layout_toRightOf="@+id/ic_avatar"
+                android:text="Sample title"
+                android:textColor="@android:color/black"
+                app:custom_font="DroidSerif-Regular"
+                android:textSize="@dimen/text_size_large" />
+
+            <gcam.vn.gbot.view.widget.FontButton
+                android:id="@+id/btnFriendMore"
+                android:layout_width="wrap_content"
+                android:layout_height="42dp"
+                android:layout_toEndOf="@+id/itemFriendTitle"
+                android:text="more"
+                android:textColor="#FFF"
+                app:custom_font="DroidSerif-Regular" />
+        </RelativeLayout>
+
+        <gcam.vn.gbot.view.widget.FontTextView
+            android:id="@+id/txt_friend_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:custom_font="DroidSerif-Regular"
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@android:color/darker_gray"
+            android:text="Friend chat"
+            android:background="@drawable/bg_friend_chat"
+            android:gravity="right"
+            android:layout_gravity="left"/>
+    </LinearLayout>
 </RelativeLayout>

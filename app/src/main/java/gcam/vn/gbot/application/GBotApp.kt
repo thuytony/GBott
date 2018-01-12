@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import com.google.gson.Gson
 import gcam.vn.gbot.manager.rest.RestBuilder
+import org.json.JSONObject
 
 /**
  * Created by thuythu on 12/01/2018.
@@ -39,4 +40,5 @@ class GBotApp : Application() {
     fun gson(): Gson {
         return instance?.gson!!
     }
+
 }
