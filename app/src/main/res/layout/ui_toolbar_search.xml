@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    android:paddingLeft="@dimen/padding_hoz_toolbar"
+    android:paddingRight="@dimen/padding_hoz_toolbar"
+    android:paddingTop="@dimen/padding_ver_toolbar"
+    android:paddingBottom="@dimen/padding_ver_toolbar">
+    <ImageView
+        android:id="@+id/icBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_thinking"
+        android:padding="@dimen/padding_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/icFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_thinking"
+        android:padding="@dimen/padding_icon"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+    <gcam.vn.gbot.view.widget.FontEditText
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/icBack"
+        android:layout_toLeftOf="@id/icFilter"
+        android:drawableLeft="@drawable/ic_thinking"
+        android:padding="@dimen/padding_search_box"
+        android:text="Search"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/colorGrayText"
+        android:drawablePadding="@dimen/padding_search_box"
+        android:layout_marginLeft="@dimen/margin_left_searchbox"
+        android:layout_marginRight="@dimen/margin_left_searchbox"
+        app:custom_font="DroidSerif-Regular"
+        android:background="@drawable/bg_search_box"/>
+
+</RelativeLayout>

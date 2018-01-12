@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">GBot</string>
+
+    <string-array name="font_name">
+        <item>DroidSerif-Regular.ttf</item>
+    </string-array>
+
+    <string name="title_default">GBot</string>
+    <string name="title_chat">GBot Chat</string>
+    <string name="title_about">Thông tin</string>
+    <string name="title_restaurant">Nhà hàng</string>
+    <string name="title_setting">Cài đặt</string>
+
+
 </resources>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <gcam.vn.gbot.view.widget.UiToolBarBack
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/title_chat"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcChat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layoutFooter"/>
+        <RelativeLayout
+            android:id="@+id/layoutFooter"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_alignParentBottom="true">
+            <gcam.vn.gbot.view.widget.FontEditText
+                android:id="@+id/edtChat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:custom_font="DroidSerif-Regular"
+                android:textSize="@dimen/text_size_large"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:hint="Input Chat"
+                android:layout_toLeftOf="@id/imgSend"/>
+            <ImageView
+                android:id="@+id/imgSend"
+                android:layout_width="40dp"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_thinking"
+                android:layout_alignParentRight="true"/>
+        </RelativeLayout>
+    </RelativeLayout>
+</LinearLayout>

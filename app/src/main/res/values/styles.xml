@@ -1,11 +1,21 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <declare-styleable name="FontStyleable">
+        <attr name="custom_font">
+            <enum name="DroidSerif-Regular" value="0"></enum>
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="ToolbarStyleable">
+        <attr name="title" format="string"></attr>
+    </declare-styleable>
 
 </resources>

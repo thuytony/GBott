@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tabs>
+
+    <tab
+        id="@+id/tabChat"
+        icon="@drawable/ic_thinking"
+        title="Chat" />
+    <tab
+        id="@+id/tabRestaurant"
+        icon="@drawable/ic_thinking"
+        title="Nhà hàng" />
+    <tab
+        id="@+id/tabAbout"
+        icon="@drawable/ic_thinking"
+        title="About" />
+    <tab
+        id="@+id/tabSetting"
+        icon="@drawable/ic_thinking"
+        title="Cài đặt" />
+
+</tabs>

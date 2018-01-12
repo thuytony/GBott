@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorPrimary"
+    android:paddingLeft="@dimen/padding_hoz_toolbar"
+    android:paddingRight="@dimen/padding_hoz_toolbar">
+    <ImageView
+        android:id="@+id/icBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_thinking"
+        android:padding="@dimen/padding_icon"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true" />
+    <ImageView
+        android:id="@+id/wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_thinking"
+        android:padding="@dimen/padding_icon"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+
+    <gcam.vn.gbot.view.widget.FontTextView
+        android:id="@+id/pageTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/icBack"
+        android:layout_toLeftOf="@id/wrapper"
+        app:custom_font="DroidSerif-Regular"
+        android:textSize="@dimen/text_size_large"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/white"/>
+
+</RelativeLayout>
