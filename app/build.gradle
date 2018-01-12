@@ -4,31 +4,71 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+Properties props = new Properties()
+try {
+    props.load(file('gbot.properties').newDataInputStream())
+} catch (Exception ex) {
+    throw new GradleException("Missing deathnote.properties, check the deathnote.properties file.")
+}
+
 android {
-    compileSdkVersion 26
+    compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "gcam.vn.gbot"
-        minSdkVersion 19
-        targetSdkVersion 26
+        applicationId "online.thuythu.deathnote"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "DOMAIN", "\"${props.getProperty("debugDomain")}\""
+            buildConfigField "String", "DOMAIN_SOCKET", "\"${props.getProperty("socketDomain")}\""
+        }
+
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "DOMAIN", "\"${props.getProperty("releaseDomain")}\""
+            buildConfigField "String", "DOMAIN_SOCKET", "\"${props.getProperty("socketDomain")}\""
         }
     }
-    buildToolsVersion '27.0.2'
+}
+
+repositories {
+    jcenter()
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    testImplementation deps.junit
+    androidTestImplementation deps.runner
+    androidTestImplementation deps.espresso
+    implementation deps.appcompat
+    implementation deps.supportDesign
+    implementation deps.supportCardview
+    implementation deps.constraintLayout
+    implementation deps.recyclerView
+
+    implementation deps.imageLoader
+    implementation deps.retrofit
+    implementation deps.retrofitConvert
+    implementation deps.retrofitAdapter
+    implementation deps.rxjava
+    implementation deps.rxandroid
+    implementation deps.okHttp
+    implementation deps.okHttpLogging
+    implementation deps.eventBus
+    implementation deps.bottomBar
+    implementation deps.circularImageV
+    implementation deps.cricleImageView
+    implementation deps.socketIo
+
+    implementation deps.glide
+    annotationProcessor deps.glideAnnotation
 }
