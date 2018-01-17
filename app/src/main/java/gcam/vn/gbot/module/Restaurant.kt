@@ -17,6 +17,8 @@ class Restaurant{
     @Expose
     private var address:String? = null
 
+    constructor()
+
     constructor(name: String?, link: String?, address: String?){
         this.name = name
         this.link = link

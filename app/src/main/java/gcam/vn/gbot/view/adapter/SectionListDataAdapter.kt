@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import gcam.vn.gbot.R
+import gcam.vn.gbot.manager.event.Event
+import gcam.vn.gbot.manager.event.EventDefine
+import gcam.vn.gbot.manager.event.EventMessage
 import gcam.vn.gbot.module.ChatFromServer
 import gcam.vn.gbot.module.Restaurant
 import gcam.vn.gbot.module.Suggestion
@@ -18,9 +21,12 @@ import kotlinx.android.synthetic.main.list_single_card.view.*
  */
 class SectionListDataAdapter: RecyclerView.Adapter<SectionListDataAdapter.SingleItemRowHolder>{
     private lateinit var itemsList: MutableList<Restaurant>
+    private lateinit var messageBot: String
     private lateinit var mContext: Context
+    private var onClickItemChat: OnClickItemChat? = null
 
-    constructor(context: Context, itemsList: MutableList<Restaurant>){
+    constructor(context: Context, itemsList: MutableList<Restaurant>, messageBot: String){
+        this.messageBot = messageBot
         this.itemsList = itemsList
         this.mContext = context
     }
@@ -32,7 +38,7 @@ class SectionListDataAdapter: RecyclerView.Adapter<SectionListDataAdapter.Single
 
     override fun onBindViewHolder(holder: SingleItemRowHolder, position: Int) {
         val singleItem = itemsList[position]
-        holder.bind(singleItem)
+        holder.bind(singleItem, position)
     }
 
     override fun getItemCount(): Int {
@@ -40,13 +46,24 @@ class SectionListDataAdapter: RecyclerView.Adapter<SectionListDataAdapter.Single
     }
 
     inner class SingleItemRowHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(singleItem: Restaurant){
+        fun bind(singleItem: Restaurant, position: Int){
             itemView.txt_friend_chat.setText(singleItem.getName())
-            itemView.setOnClickListener { v-> Toast.makeText(v.getContext(), itemView.txt_friend_chat.text, Toast.LENGTH_SHORT).show(); }
+            //itemView.setOnClickListener { v-> Toast.makeText(v.getContext(), itemView.txt_friend_chat.text, Toast.LENGTH_SHORT).show(); }
+            itemView.setOnClickListener { if(onClickItemChat!=null) onClickItemChat!!.onClickItemChat(position) }
+            itemView.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_VIEW, singleItem)) }
+            itemView.btnFriendChat.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_BUTTON, singleItem)) }
 
             Glide.with(mContext)
-                    .load(R.drawable.ic_thinking)
+                    .load(R.drawable.img_restau)
                     .into(itemView.itemImage)
         }
+    }
+
+    interface OnClickItemChat {
+        fun onClickItemChat(position: Int)
+    }
+
+    fun setOnClickItemChat(onClickItemChat: OnClickItemChat) {
+        this.onClickItemChat = onClickItemChat
     }
 }

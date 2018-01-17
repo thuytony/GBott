@@ -42,7 +42,8 @@
                 android:layout_toEndOf="@+id/itemFriendTitle"
                 android:text="more"
                 android:textColor="#FFF"
-                app:custom_font="DroidSerif-Regular" />
+                app:custom_font="DroidSerif-Regular"
+                android:visibility="invisible"/>
         </RelativeLayout>
 
         <gcam.vn.gbot.view.widget.FontTextView
@@ -51,7 +52,7 @@
             android:layout_height="wrap_content"
             app:custom_font="DroidSerif-Regular"
             android:textSize="@dimen/text_size_large"
-            android:textColor="@android:color/darker_gray"
+            android:textColor="@color/colorText"
             android:text="Friend chat"
             android:background="@drawable/bg_friend_chat"
             android:gravity="right"

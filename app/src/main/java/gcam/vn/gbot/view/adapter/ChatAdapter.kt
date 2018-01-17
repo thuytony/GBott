@@ -7,13 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import gcam.vn.gbot.R
+import gcam.vn.gbot.manager.event.Event
+import gcam.vn.gbot.manager.event.EventDefine
+import gcam.vn.gbot.manager.event.EventMessage
 import gcam.vn.gbot.module.ChatFromServer
 import gcam.vn.gbot.module.Restaurant
 import gcam.vn.gbot.view.fragment.ChatDataModel
 import kotlinx.android.synthetic.main.item_friend_chat.view.*
 import kotlinx.android.synthetic.main.item_my_chat.view.*
 import kotlinx.android.synthetic.main.list_item_friend_chat.view.*
+import kotlinx.android.synthetic.main.list_one_item_friend_chat.view.*
 
 /**
  * Created by thuythu on 12/01/2018.
@@ -28,10 +33,11 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     companion object {
-        val TYPE_FRIEND_TEXT = 1
-        val TYPE_FRIEND_ITEM = 2
-        val TYPE_SUGGESTION  = 3
-        val TYPE_MY          = 4
+        val TYPE_FRIEND_TEXT     = 1
+        val TYPE_FRIEND_ITEM     = 2
+        val TYPE_SUGGESTION      = 3
+        val TYPE_MY              = 4
+        val TYPE_FRIEND_ONE_ITEM = 5
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder? {
@@ -43,6 +49,8 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
             }
             TYPE_FRIEND_ITEM -> {
                 val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item_friend_chat, null)
+                //val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item_friend_chat, viewGroup, false)
+                //v.setLayoutParams(RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
                 return ItemRowHolder(v)
             }
             TYPE_SUGGESTION -> {
@@ -54,29 +62,39 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_my_chat, null)
                 return MyChatHolder(v)
             }
+            TYPE_FRIEND_ONE_ITEM -> {
+                //val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_item_my_chat, null)
+                val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_one_item_friend_chat, null)
+                return FriendOneItemHolder(v)
+            }
             else -> return null
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder?, position: Int) {
         val sectionName = dataList.get(position).getHeaderTitle()
+        val messageBot = dataList.get(position).getMessageBot()
         val singleSectionItems = dataList.get(position).getAllItemsInSection()
         when(getItemViewType(position)){
             TYPE_FRIEND_TEXT -> {
                 val friendChatHolder = holder as FriendChatHolder
-                friendChatHolder.bind(sectionName!!, singleSectionItems!!)
+                friendChatHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
             }
             TYPE_FRIEND_ITEM -> {
                 val itemRowHolder = holder as ItemRowHolder
-                itemRowHolder.bind(sectionName!!, singleSectionItems!!)
+                itemRowHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
             }
             TYPE_SUGGESTION -> {
                 val itemSuggesionHolder = holder as ItemSuggesionHolder
-                itemSuggesionHolder.bind(sectionName!!, singleSectionItems!!)
+                itemSuggesionHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
             }
             TYPE_MY -> {
                 val myChatHolder = holder as MyChatHolder
-                myChatHolder.bind(sectionName!!, singleSectionItems!!)
+                myChatHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!)
+            }
+            TYPE_FRIEND_ONE_ITEM -> {
+                val friendOneItemHolder = holder as FriendOneItemHolder
+                friendOneItemHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
             }
         }
     }
@@ -90,8 +108,10 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     inner class FriendChatHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(sectionName: String, singleSectionItems: MutableList<Restaurant>){
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
             itemView.itemFriendTitle.setText(sectionName)
+
+            itemView.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_TEXT, position)) }
 
             /*var myChatAdapter = MyChatAdapter(mContext, singleSectionItems)
 
@@ -101,7 +121,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             itemView.btnMyMore.setOnClickListener({ v -> Toast.makeText(v.context, "click event on more my chat, " + sectionName, Toast.LENGTH_SHORT).show() })*/
             var size = singleSectionItems.size-1
-            itemView.txt_friend_chat.setText(singleSectionItems.get(size).getName())
+            itemView.txt_friend_chat.setText(messageBot)
 
             /*Glide.with(mContext)
                 .load(feedItem.getImageURL())
@@ -113,10 +133,11 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     inner class ItemRowHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(sectionName: String, singleSectionItems: MutableList<Restaurant>){
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
             itemView.itemTitle.setText(sectionName)
+            itemView.txt_answer.setText(messageBot)
 
-            var itemListDataAdapter = SectionListDataAdapter(mContext, singleSectionItems)
+            var itemListDataAdapter = SectionListDataAdapter(mContext, singleSectionItems, messageBot)
 
             itemView.recycler_view_list.setHasFixedSize(true)
             itemView.recycler_view_list.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
@@ -134,17 +155,17 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     inner class ItemSuggesionHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(sectionName: String, singleSectionItems: MutableList<Restaurant>){
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
             itemView.itemTitle.setText(sectionName)
+            itemView.txt_answer.setText(messageBot)
 
-            var itemListDataLeAdapter = SectionListDataLeAdapter(mContext, singleSectionItems)
+            var itemSuggessionAdapter = SectionSuggesstionAdapter(mContext, singleSectionItems, messageBot)
 
             itemView.recycler_view_list.setHasFixedSize(true)
             itemView.recycler_view_list.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
-            itemView.recycler_view_list.setAdapter(itemListDataLeAdapter)
+            itemView.recycler_view_list.setAdapter(itemSuggessionAdapter)
 
             itemView.btnMore.setOnClickListener({ v -> Toast.makeText(v.context, "click event on more le, " + sectionName, Toast.LENGTH_SHORT).show() })
-
             /*Glide.with(mContext)
                 .load(feedItem.getImageURL())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -155,7 +176,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     inner class MyChatHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(sectionName: String, singleSectionItems: MutableList<Restaurant>){
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>){
             itemView.itemMyTitle.setText(sectionName)
 
             /*var myChatAdapter = MyChatAdapter(mContext, singleSectionItems)
@@ -167,7 +188,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
             itemView.btnMyMore.setOnClickListener({ v -> Toast.makeText(v.context, "click event on more my chat, " + sectionName, Toast.LENGTH_SHORT).show() })*/
 
             var size = singleSectionItems.size-1
-            itemView.txt_my_chat.setText(singleSectionItems.get(size).getName())
+            itemView.txt_my_chat.setText(messageBot)
 
             /*Glide.with(mContext)
                 .load(feedItem.getImageURL())
@@ -175,6 +196,21 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 .centerCrop()
                 .error(R.drawable.bg)
                 .into(feedListRowHolder.thumbView);*/
+        }
+    }
+
+    inner class FriendOneItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
+            itemView.itemOneTitle.setText(sectionName)
+            itemView.txtFriendOneChat.setText(messageBot)
+            itemView.txtDescripOneChat.setText(singleSectionItems.get(0).getName())
+
+            Glide.with(itemView.context)
+                    .load(R.drawable.img_restau)
+                    .into(itemView.itemOneImage)
+
+            itemView.btnFriendOneChat.setOnClickListener { v ->  Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_BUTTON, singleSectionItems.get(0)))}
+            itemView.setOnClickListener { v ->  Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_VIEW, singleSectionItems.get(0)))}
         }
     }
 

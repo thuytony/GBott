@@ -9,6 +9,7 @@ import gcam.vn.gbot.module.Restaurant
 class ChatDataModel{
 
     private var headerTitle: String? = null
+    private var messageBot: String? = null
     private var allItemsInSection: MutableList<Restaurant>? = null
     private var type: Int? = null
 
@@ -17,8 +18,9 @@ class ChatDataModel{
 
     }
 
-    constructor(headerTitle: String, allItemsInSection: ArrayList<Restaurant>){
+    constructor(headerTitle: String, messageBot: String, allItemsInSection: ArrayList<Restaurant>){
         this.headerTitle = headerTitle
+        this.messageBot = messageBot
         this.allItemsInSection = allItemsInSection
     }
 
@@ -29,6 +31,14 @@ class ChatDataModel{
 
     fun setHeaderTitle(headerTitle: String) {
         this.headerTitle = headerTitle
+    }
+
+    fun getMessageBot(): String? {
+        return messageBot
+    }
+
+    fun setMessageBot(messageBot: String) {
+        this.messageBot = messageBot
     }
 
     fun getAllItemsInSection(): MutableList<Restaurant>? {

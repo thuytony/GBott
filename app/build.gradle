@@ -4,6 +4,8 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'io.fabric'
+
 Properties props = new Properties()
 try {
     props.load(file('gbot.properties').newDataInputStream())
@@ -14,7 +16,7 @@ try {
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "gcam.vn.gbot.view.fragment"
+        applicationId "gcam.vn.gbot"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -40,6 +42,7 @@ android {
 
 repositories {
     jcenter()
+    maven { url 'https://maven.fabric.io/public' }
 }
 
 dependencies {
@@ -71,4 +74,8 @@ dependencies {
 
     implementation deps.glide
     annotationProcessor deps.glideAnnotation
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
+        transitive = true;
+    }
 }
