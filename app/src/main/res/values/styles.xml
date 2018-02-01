@@ -11,6 +11,7 @@
     <declare-styleable name="FontStyleable">
         <attr name="custom_font">
             <enum name="DroidSerif-Regular" value="0"></enum>
+            <enum name="asman" value="1"></enum>
         </attr>
     </declare-styleable>
 

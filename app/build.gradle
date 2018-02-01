@@ -57,6 +57,8 @@ dependencies {
     implementation deps.supportCardview
     implementation deps.constraintLayout
     implementation deps.recyclerView
+    implementation deps.serviceMap
+    implementation deps.serviceLocation
 
     implementation deps.imageLoader
     implementation deps.retrofit
@@ -74,6 +76,9 @@ dependencies {
 
     implementation deps.glide
     annotationProcessor deps.glideAnnotation
+
+    implementation deps.matteriaEditText
+    implementation deps.matterialDialog
 
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
         transitive = true;

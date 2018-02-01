@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         app:title="@string/title_restaurant"/>
     <gcam.vn.gbot.view.widget.FontTextView
+        android:id="@+id/txtRestaurant"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/icBack"
@@ -17,6 +18,15 @@
         android:textSize="@dimen/text_size_large"
         android:gravity="center"
         android:layout_centerVertical="true"
-        android:textColor="@android:color/white"
+        android:textColor="@color/colorText"
         android:text="@string/title_restaurant"/>
+    <gcam.vn.gbot.view.widget.FontButton
+        android:id="@+id/btnChange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="change text"
+        android:textColor="#FFF"
+        app:custom_font="DroidSerif-Regular"
+        android:layout_gravity="center_horizontal"/>
 </LinearLayout>

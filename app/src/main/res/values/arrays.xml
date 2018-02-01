@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="pick_suggestion">
+        <item>Chưa có dữ liệu</item>
+    </string-array>
+</resources>

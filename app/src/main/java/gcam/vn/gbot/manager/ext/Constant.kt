@@ -8,6 +8,10 @@ import gcam.vn.gbot.module.ChatFromServer
  */
 class Constant{
     companion object {
+        //activity for result
+        val RESULT_REQUEST_LOCATION = 3000
+
+        //type object
         val chatFromServerType = object : TypeToken<ChatFromServer>() {}.type
     }
 }

@@ -38,6 +38,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         val TYPE_SUGGESTION      = 3
         val TYPE_MY              = 4
         val TYPE_FRIEND_ONE_ITEM = 5
+        val TYPE_WAIT_BOT        = 6
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): RecyclerView.ViewHolder? {
@@ -67,6 +68,10 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.list_one_item_friend_chat, null)
                 return FriendOneItemHolder(v)
             }
+            TYPE_WAIT_BOT -> {
+                val v = LayoutInflater.from(viewGroup.context).inflate(R.layout.item_wait_bot, null)
+                return WaitBotHolder(v)
+            }
             else -> return null
         }
     }
@@ -95,6 +100,10 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
             TYPE_FRIEND_ONE_ITEM -> {
                 val friendOneItemHolder = holder as FriendOneItemHolder
                 friendOneItemHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
+            }
+            TYPE_WAIT_BOT -> {
+                val waitBotHolder = holder as WaitBotHolder
+                waitBotHolder.bind(sectionName!!, messageBot!!, singleSectionItems!!, position)
             }
         }
     }
@@ -211,6 +220,20 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
             itemView.btnFriendOneChat.setOnClickListener { v ->  Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_BUTTON, singleSectionItems.get(0)))}
             itemView.setOnClickListener { v ->  Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_VIEW, singleSectionItems.get(0)))}
+        }
+    }
+
+    inner class WaitBotHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
+            itemView.itemFriendTitle.setText(sectionName)
+            var size = singleSectionItems.size-1
+            itemView.txt_friend_chat.setText(". . . ")
+            /*Glide.with(mContext)
+                .load(feedItem.getImageURL())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .centerCrop()
+                .error(R.drawable.bg)
+                .into(feedListRowHolder.thumbView);*/
         }
     }
 

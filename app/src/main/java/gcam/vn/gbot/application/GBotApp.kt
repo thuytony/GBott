@@ -37,7 +37,7 @@ class GBotApp : Application() {
         context = applicationContext
         instance = this
         gson = RestBuilder.provideGson()
-        Fabric.with(this, Crashlytics())
+        //Fabric.with(this, Crashlytics())
     }
 
 

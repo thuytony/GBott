@@ -10,7 +10,7 @@
         android:id="@+id/icBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_thinking"
+        android:src="@drawable/ic_menu"
         android:padding="@dimen/padding_icon"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true" />
@@ -18,7 +18,7 @@
         android:id="@+id/wrapper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_thinking"
+        android:src="@drawable/ic_search"
         android:padding="@dimen/padding_icon"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />

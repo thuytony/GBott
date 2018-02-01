@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import gcam.vn.gbot.R
 import gcam.vn.gbot.view.widget.BaseFragment
+import kotlinx.android.synthetic.main.fragment_restaurant.*
 
 /**
  * Created by thuythu on 12/01/2018.
@@ -20,6 +21,8 @@ class RestaurantFragment: BaseFragment(){
 
     override fun init() {
         super.init()
+
+        btnChange.setOnClickListener { txtRestaurant.setText("Change text") }
     }
 
     companion object {

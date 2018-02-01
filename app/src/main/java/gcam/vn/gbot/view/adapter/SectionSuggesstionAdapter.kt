@@ -43,7 +43,8 @@ class SectionSuggesstionAdapter : RecyclerView.Adapter<SectionSuggesstionAdapter
 
     inner class SingleItemRowHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(singleItem: Restaurant){
-            itemView.txt_friend_chat.setText(singleItem.getName())
+            //gan content 0 cho name, key cho link, type cho address, content cho content
+            itemView.txt_friend_chat.setText(singleItem.getLink())
             //itemView.setOnClickListener { v-> Toast.makeText(v.getContext(), itemView.txt_friend_chat.text, Toast.LENGTH_SHORT).show(); }
             itemView.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_SUGGESTION, singleItem)) }
         }

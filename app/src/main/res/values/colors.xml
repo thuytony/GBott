@@ -6,4 +6,12 @@
     <color name="colorGrayText">#909090</color>
     <color name="colorText">#BF000000</color>
     <color name="colorLine">#12000000</color>
+    <color name="colorButtonDefault">#bc1c99ec</color>
+    <color name="colorTextItem">#030303</color>
+    <color name="colorBgFriendChat">#d2ffffff</color>
+    <color name="colorBgMyChat">#d241acef</color>
+    <color name="colorBorderFriendChat">#caf5f5f2</color>
+    <color name="colorTextChat">#d9000000</color>
+    <color name="colorToastSuccess">#f025da55</color>
+    <color name="colorToastInfo">#f06177e9</color>
 </resources>

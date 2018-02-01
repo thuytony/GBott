@@ -17,12 +17,22 @@ class Restaurant{
     @Expose
     private var address:String? = null
 
+    //list string content cua suggestion
+    private var content: List<String> ? = null
+
     constructor()
 
     constructor(name: String?, link: String?, address: String?){
         this.name = name
         this.link = link
         this.address = address
+    }
+
+    constructor(name: String?, link: String?, address: String?, content: List<String>?){
+        this.name = name
+        this.link = link
+        this.address = address
+        this.content = content
     }
 
     fun setName(name: String){
@@ -44,5 +54,12 @@ class Restaurant{
     }
     fun getAddress(): String?{
         return address
+    }
+
+    fun setContent(content: List<String>){
+        this.content = content
+    }
+    fun getContent(): List<String>?{
+        return content
     }
 }

@@ -3,6 +3,7 @@
 
     <string-array name="font_name">
         <item>DroidSerif-Regular.ttf</item>
+        <item>asman.ttf</item>
     </string-array>
 
     <string name="title_default">GBot</string>
@@ -10,6 +11,8 @@
     <string name="title_about">Thông tin</string>
     <string name="title_restaurant">Nhà hàng</string>
     <string name="title_setting">Cài đặt</string>
+
+    <string name="cannot_get_location">Không thể lấy vị trí khi bạn chưa cấp quyền truy cập GPS</string>
 
 
 </resources>

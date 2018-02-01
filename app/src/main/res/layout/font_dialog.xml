@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <gcam.vn.gbot.view.widget.FontButton
+        android:id="@+id/btnYes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Có"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_medium"
+        app:custom_font="DroidSerif-Regular"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_button_login"
+        android:layout_marginRight="@dimen/padding_main_screen"
+        android:layout_weight="1"/>
+    <gcam.vn.gbot.view.widget.FontButton
+        android:id="@+id/btnNo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Không"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/text_size_medium"
+        app:custom_font="DroidSerif-Regular"
+        android:textAllCaps="false"
+        android:background="@drawable/bg_button_login"
+        android:layout_weight="1"/>
+</LinearLayout>

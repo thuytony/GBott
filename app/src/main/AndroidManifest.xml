@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="gcam.vn.gbot">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:name=".application.GBotApp"
@@ -11,6 +16,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e6fea41019b50b825801a1c46bb39b6cf64b01b8" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBOgy63JE7LbFQSwUnvvVuszOzJ0N4uvuk" />
+
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,10 +31,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.activity.HomeActivity"></activity>
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="e6fea41019b50b825801a1c46bb39b6cf64b01b8" />
+        <activity android:name=".view.activity.HomeActivity" />
+
+        <activity android:name=".view.activity.LoginActivity"></activity>
+
     </application>
 
 </manifest>

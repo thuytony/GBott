@@ -37,4 +37,5 @@ class NonSwipeableViewPager : ViewPager {
     fun setScrollEnabled(enabled: Boolean) {
         this.enabled = enabled
     }
+
 }

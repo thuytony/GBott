@@ -16,9 +16,9 @@ class Suggestion : Serializable {
     private var restaurant:Restaurant? = null
     @SerializedName("keyword")
     @Expose
-    private var keyword:List<String>? = null
+    private var keyword:List<KeyWord>? = null
 
-    constructor(restaurants: List<Restaurant>?, restaurant: Restaurant?, keyword: List<String>?){
+    constructor(restaurants: List<Restaurant>?, restaurant: Restaurant?, keyword: List<KeyWord>?){
         this.restaurants = restaurants
         this.restaurant = restaurant
         this.keyword = keyword
@@ -38,10 +38,10 @@ class Suggestion : Serializable {
         return restaurant
     }
 
-    fun setKeyword(keyword: List<String>){
+    fun setKeyword(keyword: List<KeyWord>){
         this.keyword = keyword
     }
-    fun getKeyword(): List<String>?{
+    fun getKeyword(): List<KeyWord>?{
         return keyword
     }
 }

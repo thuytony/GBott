@@ -16,27 +16,43 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layoutFooter"/>
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/layoutFooter"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true">
-            <gcam.vn.gbot.view.widget.FontEditText
+            android:layout_height="70dp"
+            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:background="@android:color/white">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorLine"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="5dp">
+            <gcam.vn.gbot.view.widget.FontMaterialEditText
                 android:id="@+id/edtChat"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:custom_font="DroidSerif-Regular"
-                android:textSize="@dimen/text_size_large"
+                android:textSize="@dimen/text_size_high"
                 android:gravity="center"
                 android:textColor="@android:color/black"
-                android:hint="Input Chat"
-                android:layout_toLeftOf="@id/imgSend"/>
+                android:hint="Nội dung"
+                android:layout_toLeftOf="@id/imgSend"
+                app:met_floatingLabel="none"
+                app:met_maxCharacters="200"
+                app:met_primaryColor="@color/colorGrayText"
+                app:met_underlineColor="@color/colorLine"
+                app:custom_font="DroidSerif-Regular" />
             <ImageView
                 android:id="@+id/imgSend"
                 android:layout_width="40dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_thinking"
-                android:layout_alignParentRight="true"/>
+                android:src="@drawable/ic_not_send"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="10dp"/>
         </RelativeLayout>
+        </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

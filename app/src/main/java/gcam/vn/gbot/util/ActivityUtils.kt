@@ -3,6 +3,7 @@ package gcam.vn.gbot.util
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 
+
 /**
  * Created by thuythu on 12/01/2018.
  */
@@ -38,6 +39,7 @@ class ActivityUtils{
             val removeFr = fragmentManager.findFragmentByTag(tag)
             fragmentManager.popBackStack()
         }
+
 
     }
 

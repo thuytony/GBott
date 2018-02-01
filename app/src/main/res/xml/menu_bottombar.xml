@@ -3,19 +3,19 @@
 
     <tab
         id="@+id/tabChat"
-        icon="@drawable/ic_thinking"
+        icon="@drawable/ic_chat"
         title="Chat" />
     <tab
         id="@+id/tabRestaurant"
-        icon="@drawable/ic_thinking"
+        icon="@drawable/ic_restaurant"
         title="Nhà hàng" />
     <tab
         id="@+id/tabAbout"
-        icon="@drawable/ic_thinking"
+        icon="@drawable/ic_aboutt"
         title="About" />
     <tab
         id="@+id/tabSetting"
-        icon="@drawable/ic_thinking"
+        icon="@drawable/ic_setting"
         title="Cài đặt" />
 
 </tabs>
