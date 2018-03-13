@@ -38,6 +38,17 @@ android {
             buildConfigField "String", "DOMAIN_SOCKET", "\"${props.getProperty("socketDomain")}\""
         }
     }
+    useLibrary  'org.apache.http.legacy'
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
 }
 
 repositories {
@@ -59,7 +70,6 @@ dependencies {
     implementation deps.recyclerView
     implementation deps.serviceMap
     implementation deps.serviceLocation
-
     implementation deps.imageLoader
     implementation deps.retrofit
     implementation deps.retrofitConvert
@@ -73,14 +83,14 @@ dependencies {
     implementation deps.circularImageV
     implementation deps.cricleImageView
     implementation deps.socketIo
-
     implementation deps.glide
     annotationProcessor deps.glideAnnotation
-
     implementation deps.matteriaEditText
     implementation deps.matterialDialog
-
+    implementation deps.fresco
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-        transitive = true;
+        transitive = true
     }
+    compile project(':frescoimageviewer')
+    implementation deps.volley
 }

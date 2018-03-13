@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <gcam.vn.gbot.view.widget.FontTextView
+        android:id="@+id/txt_friend_chat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:custom_font="DroidSerif-Regular"
+        android:textSize="@dimen/text_size_high"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@color/colorTextChat"
+        android:text="Friend chat"
+        android:background="@drawable/bg_suggesstion"
+        android:padding="@dimen/padding_item_chat"
+        android:layout_marginRight="@dimen/padding_item_chat"
+        android:minWidth="100dp"/>
+</RelativeLayout>

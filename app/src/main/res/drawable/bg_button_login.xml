@@ -1,13 +1,50 @@
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid
-        android:color="@color/colorAccent"></solid>
-    <corners
-        android:radius="600dp" />
-    <padding
-        android:left="10dp"
-        android:top="10dp"
-        android:right="10dp"
-        android:bottom="10dp" />
-    <stroke
-        android:width="3px" android:color="#358f8585"/>
-</shape>
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item  android:state_pressed="true">
+        <shape>
+            <solid
+                android:color="#d62d66"></solid>
+            <corners
+                android:radius="600dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+            <stroke
+                android:width="3px" android:color="#358f8585"/>
+        </shape>
+    </item>
+
+    <item  android:state_focused="true">
+        <shape>
+            <solid
+                android:color="#d62d66"></solid>
+            <corners
+                android:radius="600dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+            <stroke
+                android:width="3px" android:color="#358f8585"/>
+        </shape>
+    </item>
+
+    <item>
+        <shape>
+            <solid
+                android:color="@color/colorAccent"></solid>
+            <corners
+                android:radius="600dp" />
+            <padding
+                android:left="10dp"
+                android:top="10dp"
+                android:right="10dp"
+                android:bottom="10dp" />
+            <stroke
+                android:width="3px" android:color="#358f8585"/>
+        </shape>
+    </item>
+</selector>

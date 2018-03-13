@@ -1,6 +1,7 @@
 package gcam.vn.gbot.view.fragment
 
 import gcam.vn.gbot.module.ChatFromServer
+import gcam.vn.gbot.module.KeyWord
 import gcam.vn.gbot.module.Restaurant
 
 /**
@@ -12,6 +13,7 @@ class ChatDataModel{
     private var messageBot: String? = null
     private var allItemsInSection: MutableList<Restaurant>? = null
     private var type: Int? = null
+    private var contentKeyword :MutableList<KeyWord>? = null
 
 
     constructor(){
@@ -59,6 +61,13 @@ class ChatDataModel{
 
     fun setType(type: Int) {
         this.type = type
+    }
+
+    fun setContentKeyWord(contentKeyword: MutableList<KeyWord>?){
+        this.contentKeyword = contentKeyword
+    }
+    fun getContentKeyWord(): MutableList<KeyWord>? {
+        return contentKeyword
     }
 
 }

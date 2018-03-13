@@ -19,7 +19,7 @@
         <LinearLayout
             android:id="@+id/layoutFooter"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentBottom="true"
             android:background="@android:color/white">
@@ -30,28 +30,42 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp">
+            android:paddingRight="@dimen/padding_footer_chat"
+            android:paddingLeft="@dimen/padding_footer_chat">
+            <ImageView
+                android:id="@+id/imgEmoji"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_emoji"
+                android:layout_alignParentLeft="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignBottom="@id/edtChat"/>
             <gcam.vn.gbot.view.widget.FontMaterialEditText
                 android:id="@+id/edtChat"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:textSize="@dimen/text_size_high"
-                android:gravity="center"
+                android:gravity="left"
                 android:textColor="@android:color/black"
                 android:hint="Nội dung"
                 android:layout_toLeftOf="@id/imgSend"
+                android:layout_toRightOf="@+id/imgEmoji"
                 app:met_floatingLabel="none"
                 app:met_maxCharacters="200"
                 app:met_primaryColor="@color/colorGrayText"
                 app:met_underlineColor="@color/colorLine"
-                app:custom_font="DroidSerif-Regular" />
+                app:custom_font="DroidSerif-Regular"
+                android:maxLines="3"/>
             <ImageView
                 android:id="@+id/imgSend"
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:src="@drawable/ic_not_send"
                 android:layout_alignParentRight="true"
-                android:layout_marginLeft="10dp"/>
+                android:layout_marginLeft="10dp"
+                android:layout_marginBottom="10dp"
+                android:layout_alignBottom="@id/edtChat"/>
         </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

@@ -16,12 +16,19 @@ class Suggestion : Serializable {
     private var restaurant:Restaurant? = null
     @SerializedName("keyword")
     @Expose
-    private var keyword:List<KeyWord>? = null
+    private var keyword:MutableList<KeyWord>? = null
+    @SerializedName("images")
+    @Expose
+    private var images:List<String>? = null
+    @SerializedName("type")
+    @Expose
+    private var type:Int? = null
 
-    constructor(restaurants: List<Restaurant>?, restaurant: Restaurant?, keyword: List<KeyWord>?){
+    constructor(restaurants: List<Restaurant>?, restaurant: Restaurant?, keyword: MutableList<KeyWord>?, images: List<String>?){
         this.restaurants = restaurants
-        this.restaurant = restaurant
-        this.keyword = keyword
+        this.restaurant  = restaurant
+        this.keyword     = keyword
+        this.images      = images
     }
 
     fun setRestaurants(restaurants: List<Restaurant>){
@@ -38,10 +45,24 @@ class Suggestion : Serializable {
         return restaurant
     }
 
-    fun setKeyword(keyword: List<KeyWord>){
+    fun setKeyword(keyword: MutableList<KeyWord>){
         this.keyword = keyword
     }
-    fun getKeyword(): List<KeyWord>?{
+    fun getKeyword(): MutableList<KeyWord>?{
         return keyword
+    }
+
+    fun setImages(images: List<String>){
+        this.images = images
+    }
+    fun getImages(): List<String>?{
+        return images
+    }
+
+    fun setType(type: Int){
+        this.type = type
+    }
+    fun getType(): Int?{
+        return type
     }
 }

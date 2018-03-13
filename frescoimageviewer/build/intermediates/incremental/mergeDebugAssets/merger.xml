@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/home/thuythu/ANDROID/Work/GBot/frescoimageviewer/src/main/assets"/><source path="/home/thuythu/ANDROID/Work/GBot/frescoimageviewer/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/home/thuythu/ANDROID/Work/GBot/frescoimageviewer/src/debug/assets"/></dataSet></merger>

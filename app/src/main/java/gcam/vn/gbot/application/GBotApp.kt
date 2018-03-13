@@ -6,6 +6,7 @@ import com.google.gson.Gson
 import gcam.vn.gbot.manager.rest.RestBuilder
 import org.json.JSONObject
 import com.crashlytics.android.Crashlytics
+import com.facebook.drawee.backends.pipeline.Fresco
 import io.fabric.sdk.android.Fabric
 
 
@@ -38,6 +39,7 @@ class GBotApp : Application() {
         instance = this
         gson = RestBuilder.provideGson()
         //Fabric.with(this, Crashlytics())
+        Fresco.initialize(this)
     }
 
 

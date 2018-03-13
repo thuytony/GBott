@@ -17,11 +17,15 @@ class ChatFromServer : Serializable {
     @SerializedName("suggestion")
     @Expose
     private var suggestion:Suggestion? = null
+    @SerializedName("type")
+    @Expose
+    private var type:Int? = null
 
-    constructor(answer: String?, objectUser: String?, suggestion: Suggestion?){
+    constructor(answer: String?, objectUser: String?, suggestion: Suggestion?, type: Int?){
         this.answer = answer
         this.objectUser = objectUser
         this.suggestion = suggestion
+        this.type       = type
     }
 
     fun setAnswer(answer: String){
@@ -43,5 +47,12 @@ class ChatFromServer : Serializable {
     }
     fun getSuggestion(): Suggestion?{
         return suggestion
+    }
+
+    fun setType(type: Int){
+        this.type = type
+    }
+    fun getType(): Int?{
+        return type
     }
 }

@@ -1,6 +1,7 @@
 package gcam.vn.gbot.manager.ext
 
 import com.google.gson.reflect.TypeToken
+import gcam.vn.gbot.module.AddressFromRequest
 import gcam.vn.gbot.module.ChatFromServer
 
 /**
@@ -13,5 +14,6 @@ class Constant{
 
         //type object
         val chatFromServerType = object : TypeToken<ChatFromServer>() {}.type
+        val addFromRequestType = object : TypeToken<AddressFromRequest>() {}.type
     }
 }

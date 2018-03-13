@@ -22,10 +22,16 @@ import gcam.vn.gbot.service.TrackLocation
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import android.content.IntentSender
 import android.os.Bundle
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.PendingResult
 import com.google.android.gms.location.LocationServices.API
+import com.stfalcon.frescoimageviewer.ImageViewer
+import gcam.vn.gbot.application.GBotApp
 import gcam.vn.gbot.manager.ext.Constant
+import gcam.vn.gbot.module.CustomImage
+import gcam.vn.gbot.module.ImageOverlayView
+import java.lang.reflect.Type
 
 
 /**
@@ -37,6 +43,9 @@ open class Utils{
         var jsonObject: JSONObject? = JSONObject()
         val intent = Intent()
         fun toJsonObj(key: String, value: String){
+            jsonObject!!.put(key, value)
+        }
+        fun toJsonObj(key: String, value: Double){
             jsonObject!!.put(key, value)
         }
 
@@ -95,6 +104,14 @@ open class Utils{
                 ex.printStackTrace()
             }
         }
+
+        fun convertObjectToJson(obj: Any): String{
+            return GBotApp.buildInstance().gson().toJson(obj)
+        }
+        fun convertJsonToObject(json: String, type: Type): Any{
+            return GBotApp.buildInstance().gson().fromJson(json, type)
+        }
+
         @SuppressLint("MissingPermission")
         fun getDeviceId(context: Context): String{
             var telephonyManager: TelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -165,6 +182,30 @@ open class Utils{
                     }
                 }
             })
+        }
+
+        fun showMenuViewer(context: Context, overlayView: ImageOverlayView, listImage: MutableList<CustomImage>,
+                           hierarchyBuilder: GenericDraweeHierarchyBuilder, startPos: Int,imageChangeListener: ImageViewer.OnImageChangeListener,
+                           onDismissListener: ImageViewer.OnDismissListener): ImageViewer{
+            return ImageViewer.Builder(context, listImage)
+                    .setStartPosition(startPos)
+                    .hideStatusBar(false)
+                    .allowZooming(true)
+                    .allowSwipeToDismiss(true)
+                    //.setBackgroundColor(color)
+                    //.setImageMargin(context, R.dimen.margin_item_screen)
+                    //.setImageMarginPx(marginPx)
+                    //.setContainerPadding(this, R.dimen.margin_item_screen)
+                    //.setContainerPadding(this, dimenStart, dimenTop, dimenEnd, dimenBottom)
+                    //.setContainerPaddingPx(padding)
+                    .setImageChangeListener(imageChangeListener)
+                    .setOnDismissListener(onDismissListener)
+                    .setOverlayView(overlayView)
+                    .setContainerPaddingPx(0, 0, 0, 20)
+                    .setCustomImageRequestBuilder(ImageViewer.createImageRequestBuilder())
+                    .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
+                    .setFormatter { customImage -> (customImage as CustomImage).getUrl() }
+                    .build()
         }
     }
 }

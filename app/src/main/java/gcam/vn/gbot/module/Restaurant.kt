@@ -16,9 +16,27 @@ class Restaurant{
     @SerializedName("address")
     @Expose
     private var address:String? = null
+    @SerializedName("avatar")
+    @Expose
+    private var avatar:String? = null
+    @SerializedName("price_min")
+    @Expose
+    private var priceMin:Any? = null
+    @SerializedName("price_max")
+    @Expose
+    private var priceMax:Any? = null
+    @SerializedName("menu")
+    @Expose
+    private var menu:Any? = null
+    @SerializedName("s_menu")
+    @Expose
+    private var sMenu:Any? = null
+    @SerializedName("open_time")
+    @Expose
+    private var openTime:Any? = null
 
-    //list string content cua suggestion
-    private var content: List<String> ? = null
+    //list string images cua images
+    private var images: String ? = null
 
     constructor()
 
@@ -28,11 +46,11 @@ class Restaurant{
         this.address = address
     }
 
-    constructor(name: String?, link: String?, address: String?, content: List<String>?){
+    constructor(name: String?, link: String?, address: String?, images: String?){
         this.name = name
         this.link = link
         this.address = address
-        this.content = content
+        this.images = images
     }
 
     fun setName(name: String){
@@ -56,10 +74,52 @@ class Restaurant{
         return address
     }
 
-    fun setContent(content: List<String>){
-        this.content = content
+    fun setImages(images: String){
+        this.images = images
     }
-    fun getContent(): List<String>?{
-        return content
+    fun getImages(): String?{
+        return images
+    }
+
+    fun setAvatar(avatar: String){
+        this.avatar = avatar
+    }
+    fun getAvatar(): String?{
+        return avatar
+    }
+
+    fun setPriceMin(priceMin: Any){
+        this.priceMin = priceMin
+    }
+    fun getPriceMin(): Any?{
+        return priceMin
+    }
+
+    fun setPriceMax(priceMax: Any){
+        this.priceMax = priceMax
+    }
+    fun getPriceMax(): Any?{
+        return priceMax
+    }
+
+    fun setMenu(menu: Any){
+        this.menu = menu
+    }
+    fun getMenu(): Any?{
+        return menu
+    }
+
+    fun setSMenu(sMenu: Any){
+        this.sMenu = sMenu
+    }
+    fun getSMenu(): Any?{
+        return sMenu
+    }
+
+    fun setOpenTime(openTime: Any){
+        this.openTime = openTime
+    }
+    fun getOpenTime(): Any?{
+        return openTime
     }
 }

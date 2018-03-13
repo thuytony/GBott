@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
     <gcam.vn.gbot.view.widget.FontTextView
@@ -10,11 +10,14 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_gravity="center"
-        android:text="Sample title"
+        android:gravity="center_horizontal"
+        android:text="Sample title diasndknsa jadjsanj obdojsadoj oabdbosa d dbasodbaso oad "
         android:textColor="@android:color/white"
         app:custom_font="DroidSerif-Regular"
         android:textSize="@dimen/text_size_large"
         android:drawableLeft="@drawable/ic_info"
-        android:drawablePadding="7dp"
-        android:background="@drawable/bg_toast_info"/>
+        android:drawableStart="@drawable/ic_info"
+        android:background="@drawable/bg_toast_info"
+        android:paddingLeft="@dimen/padding_item_chat"
+        android:paddingRight="@dimen/margin_item_screen"/>
 </LinearLayout>
