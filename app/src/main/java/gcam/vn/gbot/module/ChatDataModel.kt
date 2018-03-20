@@ -14,6 +14,9 @@ class ChatDataModel{
     private var allItemsInSection: MutableList<Restaurant>? = null
     private var type: Int? = null
     private var contentKeyword :MutableList<KeyWord>? = null
+    private var listAction: MutableList<KeyWord> = arrayListOf()
+    private var sql: String = ""
+    private var tagView: MutableList<KeyWord>? = null
 
 
     constructor(){
@@ -70,4 +73,24 @@ class ChatDataModel{
         return contentKeyword
     }
 
+    fun setListAction(listAction: MutableList<KeyWord>){
+        this.listAction = listAction
+    }
+    fun getListAction(): MutableList<KeyWord> {
+        return listAction
+    }
+
+    fun setSql(sql: String){
+        this.sql = sql
+    }
+    fun getSql(): String?{
+        return sql
+    }
+
+    fun setTagView(tagView: MutableList<KeyWord>){
+        this.tagView = tagView
+    }
+    fun getTagView(): MutableList<KeyWord>{
+        return tagView?: arrayListOf()
+    }
 }

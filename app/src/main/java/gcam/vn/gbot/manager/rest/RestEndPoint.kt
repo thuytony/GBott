@@ -5,6 +5,6 @@ package gcam.vn.gbot.manager.rest
  */
 class RestEndPoint{
     companion object {
-
+        const val POST_PAGE_RESTAURANT = "pasbot/api/restaurant-search.php"
     }
 }

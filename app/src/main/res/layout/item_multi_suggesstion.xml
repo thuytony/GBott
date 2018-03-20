@@ -12,9 +12,12 @@
         android:gravity="center"
         android:layout_centerVertical="true"
         android:textColor="@color/colorTextChat"
-        android:text="Friend chat"
+        android:text="Criend chat"
         android:background="@drawable/bg_suggesstion"
-        android:padding="@dimen/padding_item_chat"
+        android:paddingTop="@dimen/padding_item_chat"
+        android:paddingBottom="@dimen/padding_item_chat"
+        android:paddingLeft="13dp"
+        android:paddingRight="13dp"
         android:layout_marginRight="@dimen/padding_item_chat"
         android:minWidth="100dp"/>
 </RelativeLayout>

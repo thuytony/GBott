@@ -1,14 +1,13 @@
 package gcam.vn.gbot.view.fragment
 
 import android.content.Context
-import android.location.Address
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import gcam.vn.gbot.BuildConfig
 import gcam.vn.gbot.R
 import gcam.vn.gbot.application.GBotApp
@@ -27,16 +26,22 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import android.text.Editable
+import android.text.Selection
 import android.util.Log
+import android.view.*
+import android.webkit.WebView
+import android.widget.ImageView
+import android.widget.PopupWindow
 import com.afollestad.materialdialogs.MaterialDialog
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
-import com.google.android.gms.maps.model.LatLng
 import com.stfalcon.frescoimageviewer.ImageViewer
 import gcam.vn.gbot.manager.ext.PreferenceUtil
 import gcam.vn.gbot.manager.ext.SimpleToast
 import gcam.vn.gbot.module.*
 import gcam.vn.gbot.service.TrackLocation
 import gcam.vn.gbot.service.TrackLocationInterface
+import gcam.vn.gbot.view.adapter.SectionActionAdapter
+import gcam.vn.gbot.view.widget.FontTextView
 
 
 /**
@@ -53,6 +58,18 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
     private lateinit var prefernce: PreferenceUtil
     private lateinit var dialogPickSuggesstion: MaterialDialog
     private var postWaitBot = 0
+    private var resFromClickAction: KeyWord = KeyWord()
+    //static web view
+    private lateinit var mPopupWebView: PopupWindow
+    private lateinit var mWebViewNew: WebView
+    private lateinit var mToolBarPopUp: ImageView
+    private lateinit var mImgBackPopUp: ImageView
+    private lateinit var mPageTitle: FontTextView
+    private lateinit var chatFromServerDefault: ChatFromServer
+    private var dmmDefault = ChatDataModel()
+
+    //latlong
+    private var strLatLn: String = ""
 
     companion object {
 
@@ -137,12 +154,16 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         base.getLocation()
         TrackLocation.getInstance().setOnLocationListener(this)
 
+        //create popup web view
+        createPopUp()
+
         //them
-        var s = "{\"answer\":\"Danh sách các món ăn đặc sắc: None .\\nMenu đang cập nhập, a\\/c thông cảm \",\"suggestion\":{\"images\":[],\"restaurants\":[],\"type\":2,\"restaurant\":{\"open_time\":\"6:30:00-21:30:00\",\"menu\":[],\"name\":\"Món Huế - Trần Duy Hưng\",\"s_menu\":null,\"address\":\"67 Trần Duy Hưng, Q. Cầu Giấy\",\"avatar\":null,\"price_min\":100000,\"link\":\"https:\\/\\/pasgo.vn\\/nha-hang\\/nha-hang-mon-hue-tran-duy-hung-1308\",\"price_max\":200000},\"keyword\":[{\"key\":\"cần hỗ trợ\",\"type\":1,\"content\":[\"Tôi cần hỗ trợ\"]},{\"key\":\"tư vấn\",\"type\":1,\"content\":[\"Tôi cần tư vấn\"]},{\"key\":\"test\",\"type\":\"4\",\"content\":[\"menu\"]}]},\"objectUser\":{\"datban\":{\"@@hourofday\":\"@@unk\",\"@@dayofmonth\":\"@@unk\",\"@@people\":0,\"@@restaurant\":\"@@unk\",\"@@note\":\"@@unk\",\"@@children\":0},\"current_topic\":\"@@unk\",\"thongtinnhahang\":{\"@@restaurant\":\"@@unk\"},\"pre_topic\":\"@@unk\",\"thongtincanhan\":{\"@@phone\":\"@@unk\",\"@@username\":\"@@unk\"},\"current_block_command\":{},\"sid\":\"ea583394fccc4154bdb46d298e978aef\",\"id\":\"358079050710906\",\"tuvannhahang\":{\"@@fit\":[],\"@@price\":[],\"@@res_type\":[]}}}"
-        var have_image = "{\"answer\":\"Danh sách các món ăn đặc sắc: Lẩu riêu cá chép; Tu hài hấp rượu vang; Baba rang muối; Tôm hùm; Cá song hấp xì dầu; Cá chình nướng riềng mẻ; Gà lên mâm .\\nThực đơn chính của nhà hàng: \",\"suggestion\":{\"images\":[\"menus\\/quananngon_phandinhphung.jpg\"],\"restaurants\":[],\"type\":3,\"restaurant\":{\"open_time\":\"6:30:00-21:00:00\",\"menu\":[\"menus\\/quananngon_phandinhphung.jpg\"],\"name\":\"Quán Ăn Ngon - Phan Đình Phùng\",\"s_menu\":\"Lẩu riêu cá chép; Tu hài hấp rượu vang; Baba rang muối; Tôm hùm; Cá song hấp xì dầu; Cá chình nướng riềng mẻ; Gà lên mâm\",\"address\":\"34 Phan Đình Phùng, Q. Ba Đình\",\"avatar\":\"restaurants\\/avatar_quananngonpdp.jpg\",\"price_min\":120000,\"link\":\"https:\\/\\/pasgo.vn\\/nha-hang\\/quan-an-ngon-phan-dinh-phung-gin-giu-linh-hon-am-thuc-viet-888\",\"price_max\":150000},\"keyword\":[{\"key\":\"cần hỗ trợ\",\"type\":\"1\",\"content\":[\"Tôi cần hỗ trợ\"]},{\"key\":\"test\",\"type\":\"4\",\"content\":[\"menu\"]}]},\"objectUser\":{\"datban\":{\"@@hourofday\":\"@@unk\",\"@@dayofmonth\":\"@@unk\",\"@@people\":0,\"@@restaurant\":\"@@unk\",\"@@note\":\"@@unk\",\"@@children\":0},\"current_topic\":\"@@unk\",\"thongtinnhahang\":{\"@@restaurant\":\"@@unk\"},\"pre_topic\":\"@@unk\",\"thongtincanhan\":{\"@@phone\":\"@@unk\",\"@@username\":\"@@unk\"},\"current_block_command\":{},\"sid\":\"5af1a9b7948f4247980e97f12b095006\",\"id\":\"358079050710906\",\"tuvannhahang\":{\"@@fit\":[],\"@@price\":[],\"@@res_type\":[]}}}"
-        var chatFromServer: ChatFromServer = GBotApp.buildInstance().gson().fromJson(s, Constant.chatFromServerType)
-        var dmm = ChatDataModel()
+        var testViewOneRes = "{\"objectUser\":{\"thongtinnhahang\":{\"@@restaurant\":\"Món Huế - Trần Duy Hưng\"},\"sid\":\"fd2070ddca4d4aac8bf8b84f23b7bb9d\",\"current_topic\":\"datban\",\"pre_topic\":\"datban\",\"note_text\":\"\",\"tuvannhahang\":{\"@@res_type\":[],\"@@price\":[],\"@@fit\":[],\"@@province\":[],\"@@district\":[]},\"datban\":{\"@@people\":0,\"@@dayofmonth\":\"15-03-2018\",\"@@children\":0,\"@@restaurant\":\"Món Huế - Trần Duy Hưng\",\"@@hourofday\":\"07:00:00\",\"@@note\":\"@@unk\"},\"current_block_command\":{\"thongtindatban\":\"order\",\"thoigian\":\"order\",\"number\":\"number_to_people\",\"nhahang\":\"order\",\"children\":\"order\",\"people\":\"order\"},\"id\":\"358079050710906\",\"thongtincanhan\":{\"@@province\":\"Hà Nội\",\"@@username\":\"T\",\"@@lng\":105.8594583,\"@@phone\":\"0989892009\",\"@@lat\":20.9867161,\"@@district\":\"Trần Duy Hưng\"}},\"answer\":\"anh\\/chị đi bao nhiêu người ạ?\",\"suggestion\":{\"action\":[{\"key\":\"Chi tiết \",\"content\":[\"https:\\/\\/pasgo.vn\\/nha-hang\\/nha-hang-mon-hue-tran-duy-hung-1308\"],\"type\":\"2\"},{\"key\":\"Bản đồ \",\"content\":[\"21.011543900,105.800420000\"],\"type\":\"3\"}],\"restaurant\":{\"link\":\"https:\\/\\/pasgo.vn\\/nha-hang\\/nha-hang-mon-hue-tran-duy-hung-1308\",\"salesoff\":10,\"menu\":[\"menus\\/Pau6hU71iWH_1519966401.jpg\",\"menus\\/ch8ngi5ZtOAB_1519966401.jpg\",\"menus\\/9kZgLJ1pQr2A_1519966401.jpg\",\"menus\\/y4AWwIns2hxk_1519966401.jpg\",\"menus\\/rjDSK476Bm3N_1519966401.jpg\",\"menus\\/OLu0S4gVEPbi_1519966401.jpg\",\"menus\\/2HK6tCpSZuwA_1519966411.jpg\",\"menus\\/gAwSeChLmDXK_1519966411.jpg\",\"menus\\/XCbASrgl7TQk_1519966411.jpg\",\"menus\\/4Sc3oF2eYKdX_1519966411.jpg\",\"menus\\/XOL1_SH4KIgz_1519966411.jpg\",\"menus\\/U94elDIhznx0_1519966411.jpg\"],\"price_min\":100000,\"price_max\":200000,\"open_time\":\"6:30:00-21:30:00\",\"lng\":\"105.800420000\",\"avatar\":\"restaurants\\/1519966269_nQT7q.jpg\",\"address\":\"67 Trần Duy Hưng, Q. Cầu Giấy\",\"events\":\"I. Được tư vấn, đặt bàn và giữ chỗ miễn phíII.Tặng kèm ưu đãi lên tới 10%\",\"name\":\"Món Huế - Trần Duy Hưng\",\"s_menu\":\"Bún bò Huế; Nem công; Chả phụng; Nem nướng cuốn bánh tráng; Chạo tôm; Hến trộn xúc bánh đa\",\"lat\":\"21.011543900\"},\"restaurants\":[],\"type\":2,\"images\":[],\"keyword\":[{\"key\":\"1 người\",\"content\":[\"1 người \"],\"type\":\"1\"},{\"key\":\"2 người\",\"content\":[\"2 người \"],\"type\":\"1\"},{\"key\":\"3 người\",\"content\":[\"3 người \"],\"type\":\"1\"},{\"key\":\"4 người\",\"content\":[\"4 người \"],\"type\":\"1\"},{\"key\":\"5 người\",\"content\":[\"5 người \"],\"type\":\"1\"},{\"key\":\"6 người\",\"content\":[\"6 người \"],\"type\":\"1\"},{\"key\":\"7 người\",\"content\":[\"7 người \"],\"type\":\"1\"},{\"key\":\"8 người\",\"content\":[\"8 người \"],\"type\":\"1\"},{\"key\":\"9 người\",\"content\":[\"9 người \"],\"type\":\"1\"},{\"key\":\"10 người\",\"content\":[\"10 người \"],\"type\":\"1\"},{\"key\":\"Đổi thông tin đặt bàn\",\"content\":[\"Tôi muốn thay đổi thông tin đặt bàn\"],\"type\":\"1\"},{\"key\":\"cần hỗ trợ\",\"content\":[\"Tôi cần hỗ trợ\"],\"type\":\"1\"}]}}"
+        //var chatFromServer: ChatFromServer = GBotApp.buildInstance().gson().fromJson(testViewOneRes, Constant.chatFromServerType)
+        //var dmm = ChatDataModel()
         //addOneRestaurant(chatFromServer, dmm)
+        var strDefault = "{\"suggestion\":{\"action\":[],\"keyword\":[{\"type\":\"1\",\"content\":[\"Tôi muốn đặt bàn nhà hàng\"],\"key\":\"đặt bàn\"},{\"type\":\"1\",\"content\":[\"Tôi muốn tư vấn nhà hàng\"],\"key\":\"Tìm nhà hàng\"},{\"type\":\"1\",\"content\":[\"Tôi cần hỗ trợ\"],\"key\":\"cần hỗ trợ\"}],\"restaurant\":{},\"type\":4,\"restaurants\":[],\"images\":[]},\"answer\":\"Không có kết quả phù hợp\",\"objectUser\":{\"pre_topic\":\"tuvannhahang\",\"note_text\":\"\",\"tuvannhahang\":{\"@@province\":[],\"@@district\":[],\"@@res_type\":[],\"@@fit\":[],\"@@price\":[]},\"id\":\"866527020338542\",\"thongtincanhan\":{\"@@lng\":105.8594595,\"@@phone\":\"@@unk\",\"@@province\":\"Hà Nội\",\"@@district\":\"Trần Duy Hưng\",\"@@username\":\"@@unk\",\"@@lat\":20.9867199},\"sid\":\"71d47b9a82d145809cc37ad6d296b998\",\"datban\":{\"@@note\":\"@@unk\",\"@@dayofmonth\":\"@@unk\",\"@@hourofday\":\"@@unk\",\"@@children\":0,\"@@people\":0,\"@@restaurant\":\"Món Huế - Trần Duy Hưng\"},\"current_topic\":\"tuvannhahang\",\"thongtinnhahang\":{\"@@restaurant\":\"King BBQ - Đào Tấn\"},\"current_block_command\":{}}}"
+        chatFromServerDefault = GBotApp.buildInstance().gson().fromJson(strDefault, Constant.chatFromServerType)
         //
     }
 
@@ -167,7 +188,7 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dm.setType(ChatAdapter.TYPE_MY)
         //restaurant.removeAll(restaurant)
         restaurant = arrayListOf()
-        restaurant.add(Restaurant(edtChat.text.toString(), null, null))
+        restaurant.add(Restaurant(edtChat.text.toString(), null, null, null))
         dm.setAllItemsInSection(restaurant)
         LogUtil.d("size", allSampleData.size.toString())
         allSampleData.add(dm)
@@ -300,7 +321,8 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         var dmm = ChatDataModel()
         //restaurant.removeAll(restaurant)
         restaurant = arrayListOf()
-        chatFromServer.setType(chatFromServer.getSuggestion()!!.getType()!!)
+        //chatFromServer.setType(chatFromServer.getSuggestion()!!.getType()!!)
+        chatFromServer.setType(chatFromServer.getSuggestion()?.getType()?:ChatAdapter.TYPE_FRIEND_TEXT)
         if(chatFromServer.getType() == ChatAdapter.TYPE_RESTAURANTS){
             var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
             LogUtil.d("size", "size tra ve: "+size.toString())
@@ -308,17 +330,34 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
                 //khi restaurants co 1 item
                 addRestaurantsIfOne(chatFromServer, dmm)
             }else {
-                addRestaurants(chatFromServer, dmm)
+                var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
+                //khoi tao du lieu neu null
+                if(size<=0){
+                    addFriendChatText(chatFromServerDefault, dmmDefault)
+                }else{
+                    addRestaurants(chatFromServer, dmm)
+                }
             }
         }else if(chatFromServer.getType() == ChatAdapter.TYPE_RESTAURANT){
-            addOneRestaurant(chatFromServer, dmm)
+            //khoi tao du lieu neu null
+            if(chatFromServer.getSuggestion()!!.getRestaurant()==null){
+                addFriendChatText(chatFromServerDefault, dmmDefault)
+            }else{
+                addOneRestaurant(chatFromServer, dmm)
+            }
         }else if(chatFromServer.getType() == ChatAdapter.TYPE_IMAGES){
             var sizeImage: Int = chatFromServer.getSuggestion()!!.getImages()!!.size
             if(sizeImage==1){
                 //khi image co 1 item
                 addImageIfOne(chatFromServer, dmm)
             }else {
-                addImages(chatFromServer, dmm)
+                var size: Int = chatFromServer.getSuggestion()!!.getImages()!!.size
+                //khoi tao du lieu neu null
+                if(size<=0){
+                    addFriendChatText(chatFromServerDefault, dmmDefault)
+                }else{
+                    addImages(chatFromServer, dmm)
+                }
             }
         }else{
             addFriendChatText(chatFromServer, dmm)
@@ -326,12 +365,20 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
     }
 
     fun addOneRestaurant(chatFromServer: ChatFromServer, dmm: ChatDataModel){
+        //khoi tao du lieu neu null
+        /*if(chatFromServer.getSuggestion()!!.getRestaurant()==null){
+            addFriendChatText(chatFromServerDefault, dmmDefault)
+            return
+        }*/
+        //het
         LogUtil.d("size", "Khi restaurant: ")
         dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
         dmm.setMessageBot(chatFromServer.getAnswer()!!)
         dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+        dmm.setListAction(chatFromServer.getSuggestion()?.getAction()?: arrayListOf())
+        dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
         dmm.setType(ChatAdapter.TYPE_RESTAURANT)
-        restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurant()!!.getName(), chatFromServer.getSuggestion()!!.getRestaurant()!!.getLink(), chatFromServer.getSuggestion()!!.getRestaurant()!!.getAddress()))
+        restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurant()!!.getName(), chatFromServer.getSuggestion()!!.getRestaurant()!!.getLink(), chatFromServer.getSuggestion()!!.getRestaurant()!!.getAddress(), chatFromServer.getSuggestion()!!.getRestaurant()!!.getAvatar()))
         LogUtil.d("size", allSampleData.size.toString())
         //dmm.setAllItemsInSection(restaurant)
         //allSampleData.add(dmm)
@@ -349,8 +396,12 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
         dmm.setMessageBot(chatFromServer.getAnswer()!!)
         dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+        dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
+        //khi list nha hang tra ve 1 nha hang -> tao list action rong, sua lai load du lieu tra ve
+        dmm.setListAction(chatFromServer.getSuggestion()?.getAction()?: arrayListOf())
+        //
         dmm.setType(ChatAdapter.TYPE_RESTAURANT)
-        restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getName(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getLink(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getAddress()))
+        restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getName(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getLink(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getAddress(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getAvatar()))
         LogUtil.d("size", allSampleData.size.toString())
         //dmm.setAllItemsInSection(restaurant)
         //allSampleData.add(dmm)
@@ -366,12 +417,21 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
     }
     fun addRestaurants(chatFromServer: ChatFromServer, dmm: ChatDataModel){
         var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
+        //khoi tao du lieu neu null
+        /*if(size<=0){
+            addFriendChatText(chatFromServerDefault, dmmDefault)
+            return
+        }*/
+        //het
         for (i in 0..size - 1) {
             dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
             dmm.setMessageBot(chatFromServer.getAnswer()!!)
             dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+            dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
+            //add sql load more
+            dmm.setSql(chatFromServer.getSuggestion()?.getSql()?:"")
             dmm.setType(ChatAdapter.TYPE_RESTAURANTS)
-            restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getName(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getLink(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getAddress()))
+            restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getName(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getLink(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getAddress(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getAvatar()))
             LogUtil.d("size", allSampleData.size.toString())
             //dmm.setAllItemsInSection(restaurant)
             //allSampleData.add(dmm)
@@ -388,11 +448,18 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
     }
     fun addImages(chatFromServer: ChatFromServer, dmm: ChatDataModel){
         var size: Int = chatFromServer.getSuggestion()!!.getImages()!!.size
+        //khoi tao du lieu neu null
+        /*if(size<=0){
+            addFriendChatText(chatFromServerDefault, dmmDefault)
+            return
+        }*/
+        //het
         LogUtil.d("size", "size tra ve: "+size.toString())
         for(i in 0..size-1){
             dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
             dmm.setMessageBot(chatFromServer.getAnswer()!!)
             dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+            dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
             dmm.setType(ChatAdapter.TYPE_IMAGES)
             //neu type = 1: text
             /*if(chatFromServer.getSuggestion()!!.getKeyword()!!.get(i).getType()!!.equals("1")){
@@ -402,7 +469,7 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
 
             }*/
             //gan content 0 cho name, key cho link, type cho address, content cho content
-            restaurant.add(Restaurant(null, null, null, chatFromServer.getSuggestion()?.getImages()?.get(i)))
+            restaurant.add(Restaurant(null, null, null, chatFromServer.getSuggestion()?.getImages()?.get(i), null))
             LogUtil.d("size", allSampleData.size.toString())
             //dmm.setAllItemsInSection(restaurant)
             //allSampleData.add(dmm)
@@ -423,8 +490,9 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
         dmm.setMessageBot(chatFromServer.getAnswer()!!)
         dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+        dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
         dmm.setType(ChatAdapter.TYPE_ONE_IMAGE)
-        restaurant.add(Restaurant(null, null, null, chatFromServer.getSuggestion()?.getImages()?.get(0)))
+        restaurant.add(Restaurant(null, null, null, chatFromServer.getSuggestion()?.getImages()?.get(0), null))
         LogUtil.d("size", allSampleData.size.toString())
         LogUtil.d("size sau", allSampleData.size.toString())
 
@@ -441,8 +509,9 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dmm.setHeaderTitle("Bot Chat - Hôm nay 18:00")
         dmm.setMessageBot(chatFromServer.getAnswer()!!)
         dmm.setContentKeyWord(chatFromServer.getSuggestion()?.getKeyword())
+        dmm.setTagView(chatFromServer.getSuggestion()?.getSearch()?: arrayListOf())
         dmm.setType(ChatAdapter.TYPE_FRIEND_TEXT)
-        restaurant.add(Restaurant(chatFromServer.getAnswer(), null, null))
+        restaurant.add(Restaurant(chatFromServer.getAnswer(), null, null, null))
         //dmm.setAllItemsInSection(restaurant)
         LogUtil.d("size", allSampleData.size.toString())
         //allSampleData.add(dmm)
@@ -462,44 +531,76 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         val message = args[1].toString()
         LogUtil.d("MAIN_SERVICE", "khi co su kien moi login: " + message)
 
+        /*
         //remove wait bot
         removeWaitBot()
         //
 
         var chatFromServer: ChatFromServer = GBotApp.buildInstance().gson().fromJson(message, Constant.chatFromServerType)
-        //LogUtil.d("MAIN_SERVICE", "khi co su kien moi login: " + chatFromServer.getSuggestion()!!.getRestaurants()!!.get(0).getLink())
+        var dmm = ChatDataModel()
+        restaurant = arrayListOf()
+        LogUtil.d("size", "size tra ve: "+chatFromServer.getSuggestion()!!.getRestaurants()!!.size)
+        addFriendChatText(chatFromServer, dmm)
+        */
 
-        /**val dm = ChatDataModel()
-        dm.setHeaderTitle("Friend Chat")
-        //singleItem.removeAll(singleItem)
-        if(chatFromServer.getSuggestion()!!.getRestaurants()!!.size>0){
-        var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
-        for(i in 0..size-1){
-        dm.setType(ChatAdapter.TYPE_RESTAURANTS)
-        restaurant.add(Restaurant(chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getName(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getLink(), chatFromServer.getSuggestion()!!.getRestaurants()!!.get(i).getAddress()))
-        }
-        }else{
-        dm.setType(ChatAdapter.TYPE_FRIEND_TEXT)
-        restaurant.add(Restaurant(chatFromServer.getAnswer(), null, null))
-        }
-        dm.setAllItemsInSection(restaurant)
-        chatAdapter.addChatData(dm)
-        base.runOnUiThread {
-        chatAdapter.notifyDataSetChanged()
-        }**/
+
+        //remove wait bot
+        removeWaitBot()
+        //
+
+        var chatFromServer: ChatFromServer = GBotApp.buildInstance().gson().fromJson(message, Constant.chatFromServerType)
 
         var dmm = ChatDataModel()
         //restaurant.removeAll(restaurant)
         restaurant = arrayListOf()
-        LogUtil.d("size", "size tra ve: "+chatFromServer.getSuggestion()!!.getRestaurants()!!.size)
-
-        addFriendChatText(chatFromServer, dmm)
+        chatFromServer.setType(chatFromServer.getSuggestion()?.getType()?:ChatAdapter.TYPE_FRIEND_TEXT)
+        if(chatFromServer.getType() == ChatAdapter.TYPE_RESTAURANTS){
+            var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
+            LogUtil.d("size", "size tra ve: "+size.toString())
+            if(size==1){
+                //khi restaurants co 1 item
+                addRestaurantsIfOne(chatFromServer, dmm)
+            }else {
+                var size: Int = chatFromServer.getSuggestion()!!.getRestaurants()!!.size
+                //khoi tao du lieu neu null
+                if(size<=0){
+                    addFriendChatText(chatFromServerDefault, dmmDefault)
+                }else{
+                    addRestaurants(chatFromServer, dmm)
+                }
+            }
+        }else if(chatFromServer.getType() == ChatAdapter.TYPE_RESTAURANT){
+            //khoi tao du lieu neu null
+            if(chatFromServer.getSuggestion()!!.getRestaurant()==null){
+                addFriendChatText(chatFromServerDefault, dmmDefault)
+            }else{
+                addOneRestaurant(chatFromServer, dmm)
+            }
+        }else if(chatFromServer.getType() == ChatAdapter.TYPE_IMAGES){
+            var sizeImage: Int = chatFromServer.getSuggestion()!!.getImages()!!.size
+            if(sizeImage==1){
+                //khi image co 1 item
+                addImageIfOne(chatFromServer, dmm)
+            }else {
+                var size: Int = chatFromServer.getSuggestion()!!.getImages()!!.size
+                //khoi tao du lieu neu null
+                if(size<=0){
+                    addFriendChatText(chatFromServerDefault, dmmDefault)
+                }else{
+                    addImages(chatFromServer, dmm)
+                }
+            }
+        }else{
+            addFriendChatText(chatFromServer, dmm)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: EventMessage) {
 
-
+        // an ban phim khi an bat ky nut nao
+        base.hideKeyboard()
+        //
         when (event.key) {
             EventDefine.CLICK_SUGGESTION -> {
                 //remove suggesstion
@@ -520,7 +621,13 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
             EventDefine.CLICK_FRIEND_ITEM_VIEW -> {
                 LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
                 resFromClick = event.values as Restaurant
-                Utils.startWebView(context!!, resFromClick.getLink()!!)
+                //Utils.startWebView(context!!, resFromClick.getLink()!!)
+                /*mWebViewNew.loadUrl(resFromClick.getLink()?:"http://google.com.vn")
+                mPageTitle.setText(resFromClick.getName())
+                mPopupWebView.showAtLocation(root, Gravity.CENTER, 0, 0)*/
+
+                edtChat.setText("${edtChat.text}${ resFromClick.getName()}")
+                edtChat.setSelection(edtChat.length())
             }
             EventDefine.CLICK_FRIEND_ITEM_BUTTON -> {
                 LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
@@ -529,19 +636,62 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
 
                 sendServerDatBan(resFromClick.getName().toString())
             }
+            EventDefine.CLICK_FRIEND_ITEM_DETAILS_RES -> {
+                LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
+                resFromClick = event.values as Restaurant
+                LogUtil.d("CLICK_ITEM_CHAT", resFromClick.getName().toString())
+
+                mWebViewNew.loadUrl(resFromClick.getLink()?:"http://google.com.vn")
+                mPageTitle.setText(resFromClick.getName())
+                mPopupWebView.showAtLocation(root, Gravity.CENTER, 0, 0)
+                base.setIsShowWebView(true)
+            }
             EventDefine.CLICK_FRIEND_TEXT -> {
                 LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
             }
             EventDefine.CLICK_FRIEND_ITEM_ONE_VIEW -> {
                 LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
                 resFromClick = event.values as Restaurant
-                Utils.startWebView(context!!, resFromClick.getLink()!!)
+                //Utils.startWebView(context!!, resFromClick.getLink()!!)
+                /*mWebViewNew.loadUrl(resFromClick.getLink()?:"http://google.com.vn")
+                mPageTitle.setText(resFromClick.getName())
+                mPopupWebView.showAtLocation(root, Gravity.CENTER, 0, 0)*/
+
+                edtChat.setText("${edtChat.text}${ resFromClick.getName()}")
+                edtChat.setSelection(edtChat.length())
             }
-            EventDefine.CLICK_FRIEND_ITEM_ONE_BUTTON -> {
-                LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
+            EventDefine.CLICK_FRIEND_ITEM_ONE_ACTION -> {
+                /*LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
                 resFromClick = event.values as Restaurant
                 LogUtil.d("CLICK_ITEM_CHAT", resFromClick.getName().toString())
-                sendServerDatBan(resFromClick.getName().toString())
+                sendServerDatBan(resFromClick.getName().toString())*/
+                resFromClickAction = event.values as KeyWord
+                LogUtil.d("CLICK_ITEM_CHAT", resFromClickAction.getKey()?:"")
+                if(resFromClickAction.getType()!!.equals(SectionActionAdapter.TYPE_BAN_DO)){
+                    resFromClickAction.getContent().let {
+                        if(resFromClickAction.getContent()!!.size>0){
+                            var intent = Intent(Intent.ACTION_VIEW,
+                                    Uri.parse("http://maps.google.com/maps?saddr=${strLatLn}&daddr=${resFromClickAction.getContent()!!.get(0)}"))
+                            startActivity(intent)
+                        }
+                    }
+                }else if(resFromClickAction.getType()!!.equals(SectionActionAdapter.TYPE_CHI_TIET)){
+                    resFromClickAction.getContent().let {
+                        if(resFromClickAction.getContent()!!.size>0){
+                            mWebViewNew.loadUrl(resFromClickAction.getContent()!!.get(0))
+                            //mPageTitle.setText(resFromClick.getName())
+                            mPageTitle.setText(resFromClickAction.getTitle())
+                            mPopupWebView.showAtLocation(root, Gravity.CENTER, 0, 0)
+                            base.setIsShowWebView(true)
+                        }
+                    }
+                }else{
+                    resFromClickAction.getContent().let {
+                        if(resFromClickAction.getContent()!!.size>0) {
+                            sendServerActionText(resFromClickAction.getContent()!!.get(0))
+                        }
+                    }
+                }
             }
             EventDefine.CLICK_FRIEND_ITEM_IMAGE -> {
                 var list:MutableList<CustomImage> = event.values as MutableList<CustomImage>
@@ -550,7 +700,28 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
                     setShowMenu(list)
                 }
             }
+            EventDefine.DISSMISS_WEBVIEW -> {
+                mPopupWebView.dismiss()
+                base.setIsShowWebView(false)
+            }
+            EventDefine.CLICK_DELETE_TAG_SEARCH -> {
+                var deleteTagSearch: ModuleDeleteTagSearch = event.values as ModuleDeleteTagSearch
+                if(allSampleData.get(deleteTagSearch.positionOfListChat).getType()!=ChatAdapter.TYPE_WAIT_BOT && allSampleData.get(deleteTagSearch.positionOfListChat).getType()!=ChatAdapter.TYPE_WAIT_BOT){
+                    allSampleData.get(deleteTagSearch.positionOfListChat).getTagView().let {
+                        if(allSampleData.get(deleteTagSearch.positionOfListChat).getTagView().size>deleteTagSearch.positionClick){
+                            allSampleData.get(deleteTagSearch.positionOfListChat).getTagView().removeAt(deleteTagSearch.positionClick)
+                            //chatAdapter.notifyItemChanged(deleteTagSearch.positionOfListChat)
+                            LogUtil.d("CLICK_ITEM_CHAT", event.values.toString())
+                            var keyWord = deleteTagSearch.keyWord
+                            if(keyWord.getType().equals("1")){
+                                sendServerDeleteTag(keyWord.getContent()?.get(0) ?: "")
+                            }else{
 
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -558,6 +729,9 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
     override fun onLocationSuccess(locationToSer: LocationToServer) {
         locationToSer.id = prefernce.getDeviceId()
         LogUtil.d("LOCATION", Utils.convertObjectToJson(locationToSer))
+
+        //lay lat long
+        strLatLn = "${locationToSer.lat},${locationToSer.lng}"
 
         //convert obj to json obj
         Utils.toJsonObj("id", prefernce.getDeviceId())
@@ -672,7 +846,7 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dm.setType(ChatAdapter.TYPE_MY)
         //restaurant.removeAll(restaurant)
         restaurant = arrayListOf()
-        restaurant.add(Restaurant(message, null, null))
+        restaurant.add(Restaurant(message, null, null, null))
         dm.setAllItemsInSection(restaurant)
         LogUtil.d("size", allSampleData.size.toString())
         allSampleData.add(dm)
@@ -702,11 +876,11 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
 
         var dm = ChatDataModel()
         dm.setHeaderTitle("My Chat - Hôm nay 18:00")
-        dm.setMessageBot(message)
+        dm.setMessageBot("Đặt bàn "+message)
         dm.setType(ChatAdapter.TYPE_MY)
         //restaurant.removeAll(restaurant)
         restaurant = arrayListOf()
-        restaurant.add(Restaurant("Đặt bàn "+message, null, null))
+        restaurant.add(Restaurant("Đặt bàn "+message, null, null, null))
         dm.setAllItemsInSection(restaurant)
         LogUtil.d("size", allSampleData.size.toString())
         allSampleData.add(dm)
@@ -728,15 +902,72 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         //
     }
 
-    fun removeSuggesstion(){
-//        if(allSampleData!!.size > 0){
-//            if(allSampleData.get(allSampleData.size-1).getType()!=ChatAdapter.TYPE_MY ||
-//                    allSampleData.get(allSampleData.size-1).getType()!=ChatAdapter.TYPE_WAIT_BOT) {
-//                if (allSampleData.get(allSampleData.size - 1).getContentKeyWord()!!.size > 0) {
-//                    allSampleData.get(allSampleData.size - 1).getContentKeyWord()!!.removeAll(allSampleData.get(allSampleData.size - 1).getContentKeyWord()!!)
-//                }
-//            }
-//        }
+    fun sendServerActionText(message: String){
+
+        //remove wait bot
+        removeWaitBot()
+        //
+
+        var dm = ChatDataModel()
+        dm.setHeaderTitle("My Chat - Hôm nay 18:00")
+        dm.setMessageBot(message)
+        dm.setType(ChatAdapter.TYPE_MY)
+        //restaurant.removeAll(restaurant)
+        restaurant = arrayListOf()
+        restaurant.add(Restaurant(message, null, null, null))
+        dm.setAllItemsInSection(restaurant)
+        LogUtil.d("size", allSampleData.size.toString())
+        allSampleData.add(dm)
+        LogUtil.d("size sau", allSampleData.size.toString())
+        chatAdapter.replaceChatData(allSampleData)
+        base.runOnUiThread {
+            chatAdapter.notifyDataSetChanged()
+            rcChat.smoothScrollToPosition(allSampleData.size)
+        }
+
+        Utils.toJsonObj("msg", message)
+        Utils.toJsonObj("type", "1")
+        Utils.toJsonObj("id", prefernce.getDeviceId())
+        mSocket.emit("client-send-msg", Utils.getJsonObj())
+        Utils.removeAllJsonObj()
+
+        //create chat
+        createWaitBot()
+        //
+    }
+
+    fun sendServerDeleteTag(message: String){
+
+        //remove wait bot
+        removeWaitBot()
+        //
+
+        var dm = ChatDataModel()
+        dm.setHeaderTitle("My Chat - Hôm nay 18:00")
+        dm.setMessageBot(message)
+        dm.setType(ChatAdapter.TYPE_MY)
+        //restaurant.removeAll(restaurant)
+        restaurant = arrayListOf()
+        restaurant.add(Restaurant(message, null, null, null))
+        dm.setAllItemsInSection(restaurant)
+        LogUtil.d("size", allSampleData.size.toString())
+        allSampleData.add(dm)
+        LogUtil.d("size sau", allSampleData.size.toString())
+        chatAdapter.replaceChatData(allSampleData)
+        base.runOnUiThread {
+            chatAdapter.notifyDataSetChanged()
+            rcChat.smoothScrollToPosition(allSampleData.size)
+        }
+
+        Utils.toJsonObj("msg", message)
+        Utils.toJsonObj("type", "1")
+        Utils.toJsonObj("id", prefernce.getDeviceId())
+        mSocket.emit("client-send-msg", Utils.getJsonObj())
+        Utils.removeAllJsonObj()
+
+        //create chat
+        createWaitBot()
+        //
     }
 
     fun removeWaitBot(){
@@ -754,7 +985,7 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
         dm.setMessageBot("wait bot chat")
         dm.setType(ChatAdapter.TYPE_WAIT_BOT)
         restaurant = arrayListOf()
-        restaurant.add(Restaurant("wait", null, null))
+        restaurant.add(Restaurant("wait", null, null, null))
         dm.setAllItemsInSection(restaurant)
         LogUtil.d("size", allSampleData.size.toString())
         allSampleData.add(dm)
@@ -764,6 +995,30 @@ class ChatFragment: BaseFragment(), TrackLocationInterface {
             chatAdapter.notifyDataSetChanged()
             rcChat.smoothScrollToPosition(allSampleData.size)
         }
+    }
+
+    fun createPopUp(){
+        val inflater = context!!.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        // Inflate the custom layout/view
+        val customView = inflater.inflate(R.layout.view_popup_webview, null)
+        mPopupWebView = PopupWindow(
+                customView,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+        )
+        if(Build.VERSION.SDK_INT>=21){
+            mPopupWebView.setElevation(5.0f);
+        }
+
+        mWebViewNew = mPopupWebView.contentView.findViewById<WebView>(R.id.webViewNew)
+        mToolBarPopUp = mPopupWebView.contentView.findViewById<ImageView>(R.id.icBack)
+        mPageTitle = mPopupWebView.contentView.findViewById<FontTextView>(R.id.pageTitle)
+        mImgBackPopUp = mToolBarPopUp.findViewById<ImageView>(R.id.icBack)
+        mImgBackPopUp.setOnClickListener {
+            mPopupWebView.dismiss()
+            base.setIsShowWebView(false)
+        }
+        mWebViewNew.getSettings().setJavaScriptEnabled(true)
     }
 
     override fun onAttach(context: Context?) {

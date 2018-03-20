@@ -4,7 +4,7 @@
             "outputFile": "/home/thuythu/ANDROID/Work/GBot/frescoimageviewer/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-it/values-it.xml",
             "map": [
                 {
-                    "source": "/home/thuythu/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.1.1.aar/aa366147f59d8e0ac38b3d4077474fab/res/values-it/values-it.xml",
+                    "source": "/home/thuythu/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.1.1.aar/a2a02c6aa58b3aaccee96a5f2a23814c/res/values-it/values-it.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

@@ -22,6 +22,9 @@ import android.opengl.ETC1.getWidth
 import android.os.Handler
 import gcam.vn.gbot.view.widget.FontDialog
 import android.widget.Toast
+import gcam.vn.gbot.manager.event.Event
+import gcam.vn.gbot.manager.event.EventDefine
+import gcam.vn.gbot.manager.event.EventMessage
 import gcam.vn.gbot.manager.ext.SimpleToast
 
 
@@ -61,12 +64,16 @@ class HomeActivity : BaseActivity(), OnTabSelectListener {
     }
 
     override fun onBackPressed() {
-        if (isExitApp) {
-            super.onBackPressed()
-            return
+        if (!getIsShowWebView()) {
+            if (isExitApp) {
+                super.onBackPressed()
+                return
+            }
+            this.isExitApp = true
+            SimpleToast.showInfo(this, "Ấn back thêm lần nữa để thoát")
+            Handler().postDelayed(Runnable { isExitApp = false }, 2000)
+        }else{
+            Event.postEvent(EventMessage(EventDefine.DISSMISS_WEBVIEW, true))
         }
-        this.isExitApp = true
-        SimpleToast.showInfo(this, "Ấn back thêm lần nữa để thoát")
-        Handler().postDelayed(Runnable { isExitApp = false }, 2000)
     }
 }

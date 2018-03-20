@@ -18,6 +18,11 @@ class KeyWord: Serializable {
     @Expose
     private var type: String? = null
 
+    private var title: String? = null
+
+
+    constructor()
+
     constructor(key: String, content: List<String>, type: String){
         this.key = key
         this.content = content
@@ -44,4 +49,13 @@ class KeyWord: Serializable {
     fun getType(): String?{
         return type
     }
+
+    //set noi dung cho text tieu de khi action webview
+    fun setTitle(title: String){
+        this.title = title
+    }
+    fun getTitle(): String{
+        return title?:""
+    }
+
 }

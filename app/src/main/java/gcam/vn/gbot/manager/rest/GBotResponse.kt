@@ -8,13 +8,13 @@ import com.google.gson.annotations.SerializedName
  */
 class GBotResponse<T> {
 
-    @SerializedName("errorId")
+    @SerializedName("code")
     @Expose
     var errorId: String? = null
     @SerializedName("data")
     @Expose
     var data: T? = null
-    @SerializedName("message")
+    @SerializedName("msg")
     @Expose
     var message: String? = null
 }

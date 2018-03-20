@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingRight="@dimen/padding_item_chat">
+<RelativeLayout
+    android:id="@+id/layout_content"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_suggesstion"
+    android:minWidth="60dp"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
+    android:paddingLeft="2dp"
+    android:paddingRight="2dp">
+    <gcam.vn.gbot.view.widget.FontTextView
+        android:id="@+id/txt_multi_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:custom_font="DroidSerif-Regular"
+        android:textSize="@dimen/text_size_mini"
+        android:gravity="center"
+        android:layout_centerVertical="true"
+        android:textColor="@android:color/white"
+        android:text="Criend chat"
+        android:paddingLeft="@dimen/padding_item_chat"/>
+    <ImageView
+        android:id="@+id/img_delete_tag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clear"
+        android:layout_toRightOf="@id/txt_multi_search"
+        android:paddingLeft="@dimen/padding_item_chat"
+        android:paddingRight="@dimen/padding_item_chat"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:background="@drawable/bg_ic_delete_tag"/>
+</RelativeLayout>
+</RelativeLayout>

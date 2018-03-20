@@ -20,6 +20,15 @@ class Suggestion : Serializable {
     @SerializedName("images")
     @Expose
     private var images:List<String>? = null
+    @SerializedName("action")
+    @Expose
+    private var action:MutableList<KeyWord>? = null
+    @SerializedName("sql")
+    @Expose
+    private var sql:String? = null
+    @SerializedName("search")
+    @Expose
+    private var search:MutableList<KeyWord>? = null
     @SerializedName("type")
     @Expose
     private var type:Int? = null
@@ -57,6 +66,27 @@ class Suggestion : Serializable {
     }
     fun getImages(): List<String>?{
         return images
+    }
+
+    fun setAction(action: MutableList<KeyWord>){
+        this.action = action
+    }
+    fun getAction(): MutableList<KeyWord>?{
+        return action
+    }
+
+    fun setSql(sql: String){
+        this.sql = sql
+    }
+    fun getSql(): String?{
+        return sql
+    }
+
+    fun setSearch(serach: MutableList<KeyWord>){
+        this.search = search
+    }
+    fun getSearch(): MutableList<KeyWord>?{
+        return search
     }
 
     fun setType(type: Int){

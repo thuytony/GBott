@@ -3,7 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_toast_info"
+    android:paddingLeft="@dimen/padding_main_screen"
+    android:paddingRight="@dimen/padding_main_screen">
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/ic_info"
+        android:layout_gravity="center_vertical"/>
+    <View
+        android:layout_width="3dp"
+        android:layout_height="30dp"/>
     <gcam.vn.gbot.view.widget.FontTextView
         android:id="@+id/txtToast"
         android:layout_width="wrap_content"
@@ -14,10 +25,5 @@
         android:text="Sample title diasndknsa jadjsanj obdojsadoj oabdbosa d dbasodbaso oad "
         android:textColor="@android:color/white"
         app:custom_font="DroidSerif-Regular"
-        android:textSize="@dimen/text_size_large"
-        android:drawableLeft="@drawable/ic_info"
-        android:drawableStart="@drawable/ic_info"
-        android:background="@drawable/bg_toast_info"
-        android:paddingLeft="@dimen/padding_item_chat"
-        android:paddingRight="@dimen/margin_item_screen"/>
+        android:textSize="@dimen/text_size_medium" />
 </LinearLayout>

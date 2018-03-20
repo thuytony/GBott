@@ -21,6 +21,7 @@ import gcam.vn.gbot.util.Utils
  */
 open class BaseActivity : AppCompatActivity() {
 
+    private var isShowWebView = false
 
     companion object {
 
@@ -73,6 +74,13 @@ open class BaseActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun setIsShowWebView(isShowWebView: Boolean){
+        this.isShowWebView = isShowWebView
+    }
+    fun getIsShowWebView(): Boolean{
+        return isShowWebView
     }
 
 }

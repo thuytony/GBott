@@ -40,17 +40,19 @@ class Restaurant{
 
     constructor()
 
-    constructor(name: String?, link: String?, address: String?){
+    constructor(name: String?, link: String?, address: String?, avatar: String?){
         this.name = name
         this.link = link
         this.address = address
+        this.avatar = avatar
     }
 
-    constructor(name: String?, link: String?, address: String?, images: String?){
+    constructor(name: String?, link: String?, address: String?, images: String?, avatar: String?){
         this.name = name
         this.link = link
         this.address = address
         this.images = images
+        this.avatar = avatar
     }
 
     fun setName(name: String){
@@ -84,8 +86,8 @@ class Restaurant{
     fun setAvatar(avatar: String){
         this.avatar = avatar
     }
-    fun getAvatar(): String?{
-        return avatar
+    fun getAvatar(): String{
+        return avatar?:"restaurants/1519973954_OFsxT.jpg"
     }
 
     fun setPriceMin(priceMin: Any){

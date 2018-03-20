@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tagview="http://schemas.android.com/tools"
     android:background="?android:selectableItemBackground"
     android:orientation="vertical"
     android:padding="@dimen/padding_item_chat">
@@ -54,6 +55,15 @@
             android:orientation="horizontal"
             android:clipToPadding="false"
             android:background="@android:color/transparent" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tagViewMulti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:clipToPadding="false"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="10dp"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_suggesstion_res"
             android:layout_width="match_parent"
