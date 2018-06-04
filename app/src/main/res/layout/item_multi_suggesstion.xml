@@ -8,7 +8,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:custom_font="DroidSerif-Regular"
-        android:textSize="@dimen/text_size_high"
+        android:textSize="@dimen/text_size_medium"
         android:gravity="center"
         android:layout_centerVertical="true"
         android:textColor="@color/colorTextChat"

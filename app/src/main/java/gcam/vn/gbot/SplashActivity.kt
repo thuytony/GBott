@@ -26,8 +26,8 @@ import gcam.vn.gbot.service.TrackLocationInterface
 import gcam.vn.gbot.util.Utils
 import gcam.vn.gbot.view.activity.LoginActivity
 import android.app.Activity
-
-
+import android.os.Build
+import gcam.vn.gbot.manager.ext.Constant
 
 
 class SplashActivity : AppCompatActivity() {
@@ -35,13 +35,7 @@ class SplashActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        setIdDevice()
-
-        var handle: Handler = Handler()
-        var runnable: Runnable = Runnable {
-            startLogin()
-        }
-        handle.postDelayed(runnable, 2000)
+        checkPermission()
     }
 
     fun startLogin(){
@@ -56,6 +50,44 @@ class SplashActivity : AppCompatActivity() {
         if(preference.getDeviceId().isEmpty()){
             preference.setDeviceId(Utils.getDeviceId(this))
             LogUtil.d("DEVICE_ID", preference.getDeviceId())
+        }
+    }
+
+    fun checkPermission(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_PHONE_STATE), Constant.REQUEST_READ_PHONE_STATE)
+            }else{
+                setIdDevice()
+
+                var handle: Handler = Handler()
+                var runnable: Runnable = Runnable {
+                    startLogin()
+                }
+                handle.postDelayed(runnable, 2000)
+            }
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            Constant.REQUEST_READ_PHONE_STATE ->
+                if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    setIdDevice()
+
+                    var handle: Handler = Handler()
+                    var runnable: Runnable = Runnable {
+                        startLogin()
+                    }
+                    handle.postDelayed(runnable, 2000)
+                }else{
+                    SimpleToast.showInfo(this, "Bạn cần cho phép quyền truy cập điện thoại để khởi động ứng dụng.")
+                    checkPermission()
+                }
+
+            else -> {
+                SimpleToast.showInfo(this, "Bạn cần cho phép quyền truy cập điện thoại để khởi động ứng dụng.")
+            }
         }
     }
 }

@@ -19,6 +19,6 @@
         android:layout_alignParentBottom="true"
         android:padding="@dimen/padding_main_screen"
         android:text="Day la description"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/colorPrimary"/>
 
 </merge>

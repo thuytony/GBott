@@ -21,6 +21,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -85,7 +86,6 @@ dependencies {
     implementation deps.socketIo
     implementation deps.glide
     annotationProcessor deps.glideAnnotation
-    implementation deps.matteriaEditText
     implementation deps.matterialDialog
     implementation deps.fresco
     compile('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
@@ -93,4 +93,6 @@ dependencies {
     }
     compile project(':frescoimageviewer')
     implementation deps.volley
+    implementation project(':libraryEditText')
+    compile 'com.android.support:multidex:1.0.1'
 }

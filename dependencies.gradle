@@ -24,7 +24,6 @@ ext {
     runnerVersion           = '1.0.1'
     espressoVersion         = '3.0.1'
     glideVersion            = '4.5.0'
-    matteriaEditText        = '2.1.4'
     matterialDialog         = '0.9.6.0'
     frescoVersion           = '1.8.0'
     volleyVersion           = '2015.05.28'
@@ -65,9 +64,6 @@ ext {
             /*https://github.com/bumptech/glide*/
             glide             : "com.github.bumptech.glide:glide:$glideVersion",
             glideAnnotation   : "com.github.bumptech.glide:compiler:$glideVersion",
-
-            /*https://github.com/rengwuxian/MaterialEditText*/
-            matteriaEditText  : "com.rengwuxian.materialedittext:library:$matteriaEditText",
             /*https://github.com/afollestad/material-dialogs*/
             matterialDialog   : "com.afollestad.material-dialogs:core:$matterialDialog",
             /*https://github.com/facebook/fresco*/

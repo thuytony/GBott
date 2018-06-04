@@ -22,6 +22,11 @@ import gcam.vn.gbot.service.TrackLocation
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import android.content.IntentSender
 import android.os.Bundle
+import android.text.Html
+import android.widget.ImageView
+import android.widget.TextView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.api.PendingResult
@@ -32,6 +37,11 @@ import gcam.vn.gbot.manager.ext.Constant
 import gcam.vn.gbot.module.CustomImage
 import gcam.vn.gbot.module.ImageOverlayView
 import java.lang.reflect.Type
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
+import java.util.regex.Pattern.matches
+import gcam.vn.gbot.R
 
 
 /**
@@ -93,6 +103,7 @@ open class Utils{
 
         }
 
+        //an ban phim
         fun hideKeyboard(activity: Activity, view: View) {
             try {
                 val view = view
@@ -112,6 +123,7 @@ open class Utils{
             return GBotApp.buildInstance().gson().fromJson(json, type)
         }
 
+        //get device id
         @SuppressLint("MissingPermission")
         fun getDeviceId(context: Context): String{
             var telephonyManager: TelephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
@@ -184,20 +196,22 @@ open class Utils{
             })
         }
 
+        //set view image menu restaurant
         fun showMenuViewer(context: Context, overlayView: ImageOverlayView, listImage: MutableList<CustomImage>,
                            hierarchyBuilder: GenericDraweeHierarchyBuilder, startPos: Int,imageChangeListener: ImageViewer.OnImageChangeListener,
                            onDismissListener: ImageViewer.OnDismissListener): ImageViewer{
+            var color = 0
+            if(Build.VERSION.SDK_INT <= Build.VERSION_CODES.M){
+                color = context.resources.getColor(android.R.color.white)
+            }else{
+                context.resources.getColor(android.R.color.white, null)
+            }
             return ImageViewer.Builder(context, listImage)
                     .setStartPosition(startPos)
                     .hideStatusBar(false)
                     .allowZooming(true)
                     .allowSwipeToDismiss(true)
-                    //.setBackgroundColor(color)
-                    //.setImageMargin(context, R.dimen.margin_item_screen)
-                    //.setImageMarginPx(marginPx)
-                    //.setContainerPadding(this, R.dimen.margin_item_screen)
-                    //.setContainerPadding(this, dimenStart, dimenTop, dimenEnd, dimenBottom)
-                    //.setContainerPaddingPx(padding)
+                    .setBackgroundColor(color)
                     .setImageChangeListener(imageChangeListener)
                     .setOnDismissListener(onDismissListener)
                     .setOverlayView(overlayView)
@@ -206,6 +220,50 @@ open class Utils{
                     .setCustomDraweeHierarchyBuilder(hierarchyBuilder)
                     .setFormatter { customImage -> (customImage as CustomImage).getUrl() }
                     .build()
+        }
+
+        //check sdt
+        fun checkIsPhone(phone: String): Boolean{
+            var regex = "(841|01|1)+?\\d{9}".toRegex()
+            var regexx = "(849|09|9)+?\\d{8}".toRegex()
+            if(regex.matches(phone)){
+                return true
+            }else if(regexx.matches(phone)){
+                return true
+            }
+            return false
+        }
+
+        //check time order restaurant
+        fun checkValiTime(time: String): Boolean{
+            val dateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm")
+            try {
+                val date = dateFormat.parse(time)
+                val now = Calendar.getInstance().timeInMillis+1800000
+                if(date.time > now){
+                    return true
+                }else{
+                    return false
+                }
+            } catch (e: ParseException) {
+                return false
+            }
+            return false
+        }
+
+        //load image
+        fun loadImageByGlide(itemView: View, imageUrl: String, imageView: ImageView){
+            var myOb: RequestOptions = RequestOptions().error(R.drawable.img_not_found)
+            Glide.with(itemView).load(imageUrl).apply(myOb).into(imageView)
+        }
+
+        //load text chi tiet nha hang dang html
+        fun loadHtml(text: TextView, str: String, html: String){
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+                text.setText(str+Html.fromHtml(html, Html.FROM_HTML_MODE_COMPACT))
+            }else{
+                text.setText(str+Html.fromHtml(html))
+            }
         }
     }
 }

@@ -4,7 +4,7 @@
             "outputFile": "/home/thuythu/ANDROID/Work/GBot/frescoimageviewer/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-night-v8/values-night-v8.xml",
             "map": [
                 {
-                    "source": "/home/thuythu/.gradle/caches/transforms-1/files-1.1/appcompat-v7-25.1.1.aar/a2a02c6aa58b3aaccee96a5f2a23814c/res/values-night-v8/values-night-v8.xml",
+                    "source": "/home/thuythu/.gradle/caches/transforms-1/files-1.1/appcompat-v7-27.0.0.aar/01ac15dc2fa587cc6200a6dc32981b8a/res/values-night-v8/values-night-v8.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8",
                         "startColumns": "4,4,4,4,4,4,4",

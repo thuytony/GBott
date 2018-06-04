@@ -21,4 +21,7 @@
     <color name="colorBgTagSearchThree">#e73259</color>
     <color name="colorBgTagSearchTwo">#1fcc2b</color>
     <color name="colorBgTagSearchFour">#e95911</color>
+
+    <color name="errorColor">#de1111</color>
+    <color name="dropDownArrowColor">#909090</color>
 </resources>

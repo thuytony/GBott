@@ -13,7 +13,7 @@ class ChatFromServer : Serializable {
     private var answer:String? = null
     @SerializedName("objectUser")
     @Expose
-    private var objectUser:Any? = null
+    private var objectUser:ObjectUser? = null
     @SerializedName("suggestion")
     @Expose
     private var suggestion:Suggestion? = null
@@ -21,7 +21,7 @@ class ChatFromServer : Serializable {
     @Expose
     private var type:Int? = null
 
-    constructor(answer: String?, objectUser: String?, suggestion: Suggestion?, type: Int?){
+    constructor(answer: String?, objectUser: ObjectUser?, suggestion: Suggestion?, type: Int?){
         this.answer = answer
         this.objectUser = objectUser
         this.suggestion = suggestion
@@ -35,11 +35,11 @@ class ChatFromServer : Serializable {
         return answer
     }
 
-    fun setObjectUser(objectUser: Any){
+    fun setObjectUser(objectUser: ObjectUser){
         this.objectUser = objectUser
     }
-    fun getObjectUser(): Any?{
-        return answer
+    fun getObjectUser(): ObjectUser?{
+        return objectUser
     }
 
     fun setSuggestion(suggestion: Suggestion){

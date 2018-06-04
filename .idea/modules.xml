@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/GBot.iml" filepath="$PROJECT_DIR$/GBot.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/frescoimageviewer/frescoimageviewer.iml" filepath="$PROJECT_DIR$/frescoimageviewer/frescoimageviewer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraryEditText/libraryEditText.iml" filepath="$PROJECT_DIR$/libraryEditText/libraryEditText.iml" />
     </modules>
   </component>
 </project>

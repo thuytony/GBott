@@ -23,4 +23,6 @@
     <dimen name="size_image_send_success">18dp</dimen>
     <dimen name="margin_detail_message">2dp</dimen>
     <dimen name="margin_left_right_edt_login">20dp</dimen>
+
+    <dimen name="margin_form_book">30dp</dimen>
 </resources>

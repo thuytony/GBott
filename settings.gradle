@@ -1,1 +1,1 @@
-include ':app', ':frescoimageviewer'
+include ':app', ':frescoimageviewer', ':libraryEditText'

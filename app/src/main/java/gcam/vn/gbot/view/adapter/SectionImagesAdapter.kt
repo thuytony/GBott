@@ -13,6 +13,7 @@ import gcam.vn.gbot.manager.event.EventMessage
 import gcam.vn.gbot.manager.ext.LogUtil
 import gcam.vn.gbot.module.CustomImage
 import gcam.vn.gbot.module.Restaurant
+import gcam.vn.gbot.util.Utils
 import kotlinx.android.synthetic.main.item_multi_images.view.*
 
 /**
@@ -45,21 +46,17 @@ class SectionImagesAdapter: RecyclerView.Adapter<SectionImagesAdapter.ItemImageH
 
     inner class ItemImageHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(singleItem: Restaurant, position: Int){
-            //itemView.setOnClickListener { v-> Toast.makeText(v.getContext(), itemView.txt_friend_chat.text, Toast.LENGTH_SHORT).show(); }
+            //click image show list image to view
             itemView.setOnClickListener {
-                LogUtil.d("CLICK_MENU", "size: ${itemsList.size}")
                 var list = arrayListOf<CustomImage>()
                 if(itemsList.size > 0) {
                     for (i in itemsList) {
-                        list.add(CustomImage("http://192.168.1.3/pasbot/uploads/${i.getImages()}", i.getSMenu().toString()))
+                        list.add(CustomImage("${i.getImages()}", i.getSMenu().toString()))
                     }
                 }
                 Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_IMAGE, list))
             }
-
-            Glide.with(mContext)
-                    .load("http://192.168.1.3/pasbot/uploads/${singleItem.getImages()}")
-                    .into(itemView.itemImage)
+            Utils.loadImageByGlide(itemView, "${singleItem.getImages()}", itemView.itemImage)
         }
     }
 }

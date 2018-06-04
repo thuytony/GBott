@@ -10,7 +10,6 @@
         android:id="@+id/imgAction"
         android:layout_width="45dp"
         android:layout_height="45dp"
-        android:src="@drawable/ic_datban"
         android:layout_gravity="center_horizontal"
         android:layout_centerVertical="true"/>
     <gcam.vn.gbot.view.widget.FontTextView

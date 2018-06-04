@@ -12,7 +12,9 @@ import gcam.vn.gbot.manager.event.Event
 import gcam.vn.gbot.manager.event.EventDefine
 import gcam.vn.gbot.manager.event.EventMessage
 import gcam.vn.gbot.manager.ext.LogUtil
+import gcam.vn.gbot.manager.ext.SimpleToast
 import gcam.vn.gbot.module.Restaurant
+import gcam.vn.gbot.util.Utils
 import kotlinx.android.synthetic.main.item_multi_restaurants.view.*
 
 /**
@@ -22,7 +24,7 @@ class SectionRestaurantsAdapter : RecyclerView.Adapter<SectionRestaurantsAdapter
     private lateinit var itemsList: MutableList<Restaurant>
     private lateinit var messageBot: String
     private lateinit var mContext: Context
-    private var onClickItemChat: OnClickItemChat? = null
+    //private var onClickItemChat: OnClickItemChat? = null
 
     //load more
     var isLoading: Boolean = false
@@ -53,6 +55,10 @@ class SectionRestaurantsAdapter : RecyclerView.Adapter<SectionRestaurantsAdapter
                         }
                         isLoading = true
                     }
+
+                    if (!rec.canScrollHorizontally(1)) {
+                        SimpleToast.showInfo(mContext, "Hãy cung cấp thêm thông tin để mình gợi ý tốt hơn nhé :)")
+                    }
                 }
             })
         }
@@ -75,24 +81,32 @@ class SectionRestaurantsAdapter : RecyclerView.Adapter<SectionRestaurantsAdapter
     inner class SingleItemRowHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(singleItem: Restaurant, position: Int){
             itemView.txt_friend_chat.setText(singleItem.getName())
-            //itemView.setOnClickListener { v-> Toast.makeText(v.getContext(), itemView.txt_friend_chat.text, Toast.LENGTH_SHORT).show(); }
-            itemView.setOnClickListener { if(onClickItemChat!=null) onClickItemChat!!.onClickItemChat(position) }
+            Utils.loadHtml(itemView.txtAboutPrice, "$$$: (${singleItem.getPriceMin()} - ${singleItem.getPriceMax()}) | ", "${singleItem.getNdtaitro()}")
+            itemView.txtAddressRestaurant.setText("${singleItem.getAddress()}")
+            itemView.txtChuyenMon.setText("${singleItem.getChuyenMon()}")
+            //itemView.setOnClickListener { if(onClickItemChat!=null) onClickItemChat!!.onClickItemChat(position) }
             itemView.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_VIEW, singleItem)) }
-            itemView.btnFriendChat.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_BUTTON, singleItem)) }
-            itemView.btnDetailRestaurants.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_DETAILS_RES, singleItem)) }
 
-            Glide.with(itemView.context)
-                    .load("http://192.168.1.3/pasbot/uploads/${singleItem.getAvatar()}")
-                    .into(itemView.itemImage)
+            if(singleItem.getStatus() == 1){
+                itemView.btnFriendChat.visibility = View.VISIBLE
+                itemView.btnFriendChat.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_BUTTON, singleItem)) }
+            }else{
+                itemView.btnFriendChat.visibility = View.GONE
+            }
+
+            itemView.btnDetailRestaurants.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_DETAILS_RES, singleItem)) }
+            itemView.btnMenu.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_MENU_RES, singleItem)) }
+
+            Utils.loadImageByGlide(itemView, "${singleItem.getAvatar()}", itemView.itemImage)
         }
     }
 
-    interface OnClickItemChat {
+    /*interface OnClickItemChat {
         fun onClickItemChat(position: Int)
     }
     fun setOnClickItemChat(onClickItemChat: OnClickItemChat) {
         this.onClickItemChat = onClickItemChat
-    }
+    }*/
 
     interface  OnLoadingMoreListener{
         fun onLoadingMore()

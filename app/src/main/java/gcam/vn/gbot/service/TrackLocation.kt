@@ -71,8 +71,8 @@ class TrackLocation private constructor(context: Context): GoogleApiClient.Conne
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build()
-        geocoder = Geocoder(context, Locale.getDefault());
-        LogUtil.d("LOCATION","uooo");
+        geocoder = Geocoder(context, Locale.getDefault())
+        LogUtil.d("LOCATION","uooo")
     }
 
     fun startGetLocation(){

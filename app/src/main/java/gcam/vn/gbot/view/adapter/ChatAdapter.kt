@@ -2,6 +2,7 @@ package gcam.vn.gbot.view.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -20,12 +21,21 @@ import gcam.vn.gbot.module.CustomImage
 import gcam.vn.gbot.module.KeyWord
 import gcam.vn.gbot.module.LoadMoreRestaurant
 import gcam.vn.gbot.module.Restaurant
+import gcam.vn.gbot.util.Utils
 import gcam.vn.gbot.view.fragment.ChatDataModel
 import kotlinx.android.synthetic.main.item_friend_text.view.*
 import kotlinx.android.synthetic.main.item_my_chat.view.*
 import kotlinx.android.synthetic.main.item_friend_multi_data.view.*
 import kotlinx.android.synthetic.main.item_friend_one_image.view.*
 import kotlinx.android.synthetic.main.item_friend_restaurant.view.*
+import rx.Observable
+import rx.Observer
+import java.util.concurrent.Callable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import rx.internal.operators.OperatorReplay.observeOn
+
+
 
 /**
  * Created by thuythu on 12/01/2018.
@@ -93,14 +103,13 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         val messageBot = dataList.get(position).getMessageBot()
         val singleSectionItems = dataList.get(position).getAllItemsInSection()
         val listAction = dataList.get(position).getListAction()
-        //val contentKeyword = dataList.get(position).getContentKeyWord()
-        //sửa lại:
+
+        //only show keyword, tag when it's last item
         var contentKeyword: MutableList<KeyWord>? = arrayListOf()
         var tagSearch: MutableList<KeyWord> = arrayListOf()
         if(position == dataList.size-1){
             contentKeyword = dataList.get(position).getContentKeyWord()
             tagSearch = dataList.get(position).getTagView()
-            LogUtil.d("TEST123", "size tag ${tagSearch.size}")
         }
 
         when(getItemViewType(position)){
@@ -140,8 +149,6 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
     }
 
     override fun getItemViewType(position: Int): Int {
-        //return dataList.get(position).getType()!!
-        //tranh null
         return dataList.get(position).getType()?: TYPE_FRIEND_TEXT
     }
 
@@ -149,6 +156,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         return if (null != dataList) dataList.size else 0
     }
 
+    //only text
     inner class FriendChatHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, contentKeyword :MutableList<KeyWord>?, tagSearch: MutableList<KeyWord>, position: Int){
             itemView.itemFriendTitle.setText(sectionName)
@@ -172,38 +180,31 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 itemView.tagViewFriendChat.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
                 itemView.tagViewFriendChat.setAdapter(itemListTagFrTextAdapter)
             }
-
-
         }
     }
 
-    inner class RestaurantsHolder(itemView: View) : RecyclerView.ViewHolder(itemView), SectionRestaurantsAdapter.OnLoadingMoreListener {
-        //load more restaurant
-        var PAGE_NUMBER = 1
-        var sql: String = ""
-        var itemListDataAdapter: SectionRestaurantsAdapter = SectionRestaurantsAdapter()
-        override fun onLoadingMore() {
-            PAGE_NUMBER++
-            LogUtil.d("LOAD_MORE", "on loading more restaurant ${PAGE_NUMBER}")
-            postPageRestaurant(sql, "${PAGE_NUMBER}", itemListDataAdapter)
-        }
-
+    inner class RestaurantsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, contentKeyword :MutableList<KeyWord>?, tagSearch: MutableList<KeyWord>, position: Int){
-            PAGE_NUMBER = 1
-            sql = dataList.get(position)?.getSql()?:""
+            //var PAGE_NUMBER = 1
             itemView.itemTitle.setText(sectionName)
             itemView.txt_answer.setText(messageBot)
             itemView.recycler_view_list.setHasFixedSize(true)
             itemView.recycler_view_list.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
-            itemListDataAdapter = SectionRestaurantsAdapter(mContext, singleSectionItems, messageBot, itemView.recycler_view_list)
+            var itemListDataAdapter = SectionRestaurantsAdapter(mContext, singleSectionItems, messageBot, itemView.recycler_view_list)
             itemView.recycler_view_list.setAdapter(itemListDataAdapter)
 
             //set load more restaurant
-            itemListDataAdapter.setOnLoadingMore(this)
-
-            /*itemView.btnMore.setOnClickListener({
-                v -> Toast.makeText(v.context, "click event on more, " + sectionName, Toast.LENGTH_SHORT).show()
-            })*/
+            itemListDataAdapter.setOnLoadingMore(object: SectionRestaurantsAdapter.OnLoadingMoreListener{
+                override fun onLoadingMore() {
+                    if(dataList.get(position).getPageNumber() > 1){
+                        LogUtil.d("LOAD_MORE", "ko cho load them ${dataList.get(position).getPageNumber()}")
+                    }else{
+                        dataList.get(position).setPageNumber(dataList.get(position).getPageNumber()+1)
+                        LogUtil.d("LOAD_MORE", "on loading more restaurant ${dataList.get(position).getPageNumber()}")
+                        postPageRestaurant(dataList.get(position)?.getSql()?:"", "${dataList.get(position).getPageNumber()}", itemListDataAdapter, position)
+                    }
+                }
+            })
 
             //set suggesstion
             contentKeyword.let {
@@ -223,6 +224,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    //load image restaurant
     inner class ItemImagesHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, contentKeyword :MutableList<KeyWord>?, tagSearch: MutableList<KeyWord>, position: Int){
             itemView.itemTitle.setText(sectionName)
@@ -231,10 +233,6 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
             itemView.recycler_view_list.setHasFixedSize(true)
             itemView.recycler_view_list.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
             itemView.recycler_view_list.setAdapter(itemSuggessionAdapter)
-
-            /*itemView.btnMore.setOnClickListener({
-                v -> Toast.makeText(v.context, "click event on more le, " + sectionName, Toast.LENGTH_SHORT).show()
-            })*/
 
             //set suggesstion
             contentKeyword.let{
@@ -254,6 +252,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    //when have one image
     inner class ItemImagesOneItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, contentKeyword :MutableList<KeyWord>?, tagSearch: MutableList<KeyWord>, position: Int){
             itemView.itemTitleOneImage.setText(sectionName)
@@ -262,21 +261,19 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
             singleSectionItems.let{
                         if(singleSectionItems.size > 0){
                             Glide.with(mContext)
-                                    .load("http://192.168.1.3/pasbot/uploads/${singleSectionItems.get(0).getImages()}")
+                                    .load("${singleSectionItems.get(0).getImages()}")
                                     .into(itemView.img_menu)
                         }
                     }
 
+            //click image show list view image
             itemView.setOnClickListener {
                 if (singleSectionItems.size > 0) {
                     var list = arrayListOf<CustomImage>()
-                    list.add(CustomImage("http://192.168.1.3/pasbot/uploads/${singleSectionItems.get(0).getImages()}", singleSectionItems.get(0).getSMenu().toString()))
+                    list.add(CustomImage("${singleSectionItems.get(0).getImages()}", singleSectionItems.get(0).getSMenu().toString()))
                     Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_IMAGE, list))
                 }
             }
-            /*itemView.btnMore.setOnClickListener({
-                v -> Toast.makeText(v.context, "click event on more le, " + sectionName, Toast.LENGTH_SHORT).show()
-            })*/
 
             //set suggesstion
             contentKeyword.let{
@@ -296,6 +293,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    //my chat
     inner class MyChatHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>){
             itemView.itemMyTitle.setText(sectionName)
@@ -304,20 +302,22 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    //one restaurant
     inner class OneRestaurantHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, contentKeyword :MutableList<KeyWord>?, listAction :MutableList<KeyWord>, tagSearch: MutableList<KeyWord>, position: Int){
             itemView.itemOneTitle.setText(sectionName)
             itemView.txtFriendOneChat.setText(messageBot)
             itemView.txtDescripOneChat.setText(singleSectionItems.get(0).getName())
 
-            //load image tu avatar
-            Glide.with(itemView.context)
-                    .load("http://192.168.1.3/pasbot/uploads/${singleSectionItems.get(0).getAvatar()}")
-                    .into(itemView.itemOneImage)
+            //itemView.txtAboutPriceOne.setText("$$$: (${singleSectionItems.get(0).getPriceMin()} - ${singleSectionItems.get(0).getPriceMax()}) | ${singleSectionItems.get(0).getNdtaitro()}")
+            Utils.loadHtml(itemView.txtAboutPriceOne, "$$$: (${singleSectionItems.get(0).getPriceMin()} - ${singleSectionItems.get(0).getPriceMax()}) | ", "${singleSectionItems.get(0).getNdtaitro()}")
+            itemView.txtAddressRestaurantOne.setText("${singleSectionItems.get(0).getAddress()}")
+            itemView.txtChuyenMonOne.setText("${singleSectionItems.get(0).getChuyenMon()}")
 
-            /*itemView.btnFriendOneChat.setOnClickListener {
-                v ->  Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_ACTION, singleSectionItems.get(0)))
-            }*/
+            //load image tu avatar
+            Utils.loadImageByGlide(itemView, "${singleSectionItems.get(0).getAvatar()}", itemView.itemOneImage)
+
+            //load list action of one restaurant
             listAction.let {
                 //set ten tieu de khi action
                 for(i in listAction){
@@ -327,6 +327,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 itemView.rcActionOneRestau.setHasFixedSize(true)
                 itemView.rcActionOneRestau.setLayoutManager(LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false))
                 itemView.rcActionOneRestau.setAdapter(itemListActionAdapter)
+
             }
 
             itemView.setOnClickListener {
@@ -351,6 +352,7 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         }
     }
 
+    //item wait bot feedback
     inner class WaitBotHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(sectionName: String, messageBot: String, singleSectionItems: MutableList<Restaurant>, position: Int){
             itemView.itemFriendTitle.setText(sectionName)
@@ -371,8 +373,8 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
         this.dataList = dataListt
     }
 
-    //get more restaurant
-    fun postPageRestaurant(sql: String, p: String, itemListDataAdapter: SectionRestaurantsAdapter){
+    //load more restaurant
+    fun postPageRestaurant(sql: String, p: String, itemListDataAdapter: SectionRestaurantsAdapter, position: Int){
         RxUtil.applyHandlerStartFinish(RestBuilder.api().postPageRestaurant(sql, p),
                 Runnable {  },
                 Runnable {  })
@@ -385,9 +387,9 @@ class ChatAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>{
                                     LogUtil.e("GET_MORE_RESTAURANT", response.data.toString())
                                     if(response.data!=null){
                                         var listRestaurant: MutableList<LoadMoreRestaurant> = response.data!!
-                                        if(dataList.get(dataList.size-1).getType()==1){
+                                        if(dataList.get(position).getType()==1){
                                             for(i in listRestaurant){
-                                                dataList.get(dataList.size-1).addItemsInSection(Restaurant(i.getName(), i.getLink(), i.getAddress(), i.getAvatar()))
+                                                dataList.get(position).addItemsInSection(Restaurant(i.getName(), i.getLink(), i.getAddress(), i.getAvatar()))
                                             }
                                         }
                                         itemListDataAdapter.setLoader()

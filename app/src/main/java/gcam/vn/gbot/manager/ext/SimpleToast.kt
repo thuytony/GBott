@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.StringRes
+import android.view.LayoutInflater
 import android.widget.Toast
 import gcam.vn.gbot.application.GBotApp
 import gcam.vn.gbot.R
@@ -32,9 +33,9 @@ class SimpleToast private constructor(context: Context) {
         handler.post { Toast.makeText(GBotApp.buildInstance(), message, duration).show() }
     }
 
-    private fun showSuccess(activity: Activity, message: String) {
+    private fun showSuccess(activity: Context, message: String) {
         if(layoutSuccess == null){
-            layoutSuccess = activity.getLayoutInflater().inflate(R.layout.custom_toast_success, null)
+            layoutSuccess = LayoutInflater.from(activity).inflate(R.layout.custom_toast_success, null)
         }
         if(toastSuccess == null){
             toastSuccess = Toast(GBotApp.buildInstance())
@@ -46,9 +47,9 @@ class SimpleToast private constructor(context: Context) {
         handler.post { toastSuccess!!.show() }
     }
 
-    private fun showInfo(activity: Activity, message: String) {
+    private fun showInfo(activity: Context, message: String) {
         if(layoutInfo == null){
-            layoutInfo = activity.getLayoutInflater().inflate(R.layout.custom_toast_info, null)
+            layoutInfo = LayoutInflater.from(activity).inflate(R.layout.custom_toast_info, null)
         }
         if(toastInfo == null){
             toastInfo = Toast(GBotApp.buildInstance())
@@ -87,11 +88,11 @@ class SimpleToast private constructor(context: Context) {
             get().show(message, Toast.LENGTH_LONG)
         }
 
-        fun showSuccess(activity: Activity, message: String){
+        fun showSuccess(activity: Context, message: String){
             get().showSuccess(activity, message)
         }
 
-        fun showInfo(activity: Activity, message: String){
+        fun showInfo(activity: Context, message: String){
             get().showInfo(activity, message)
         }
     }

@@ -6,5 +6,8 @@ package gcam.vn.gbot.manager.rest
 class RestEndPoint{
     companion object {
         const val POST_PAGE_RESTAURANT = "pasbot/api/restaurant-search.php"
+        const val GET_TIME_RESTAURANT = "pasbot/api/restaurant-opentime.php"
+        const val ORDER_RESTAURANT = "pasbot/api/restaurant-order.php"
+        const val KHIEU_NAI_RESTAURANT = "pasbot/api/dialog-send.php"
     }
 }

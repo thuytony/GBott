@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bumptech.glide.Glide
 import gcam.vn.gbot.R
 import gcam.vn.gbot.manager.event.Event
 import gcam.vn.gbot.manager.event.EventDefine
@@ -53,12 +54,15 @@ class SectionActionAdapter: RecyclerView.Adapter<SectionActionAdapter.ItemAction
             when(itemAction.getType()){
                 TYPE_DAT_BAN -> {
                     itemView.imgAction.setImageResource(R.drawable.ic_datban)
+                    //Glide.with(itemView).load(R.drawable.ic_datban).into(itemView.imgAction)
                 }
                 TYPE_CHI_TIET -> {
                     itemView.imgAction.setImageResource(R.drawable.ic_chitiet)
+                    //Glide.with(itemView).load(R.drawable.ic_chitiet).into(itemView.imgAction)
                 }
                 TYPE_BAN_DO -> {
                     itemView.imgAction.setImageResource(R.drawable.ic_bando)
+                    //Glide.with(itemView).load(R.drawable.ic_bando).into(itemView.imgAction)
                 }
             }
             itemView.setOnClickListener { Event.postEvent(EventMessage(EventDefine.CLICK_FRIEND_ITEM_ONE_ACTION, itemAction)) }

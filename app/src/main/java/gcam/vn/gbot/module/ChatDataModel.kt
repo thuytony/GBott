@@ -16,6 +16,7 @@ class ChatDataModel{
     private var contentKeyword :MutableList<KeyWord>? = null
     private var listAction: MutableList<KeyWord> = arrayListOf()
     private var sql: String = ""
+    private var pageNumber = 1
     private var tagView: MutableList<KeyWord>? = null
 
 
@@ -85,6 +86,13 @@ class ChatDataModel{
     }
     fun getSql(): String?{
         return sql
+    }
+
+    fun setPageNumber(pageNumber: Int){
+        this.pageNumber = pageNumber
+    }
+    fun getPageNumber(): Int{
+        return pageNumber
     }
 
     fun setTagView(tagView: MutableList<KeyWord>){
